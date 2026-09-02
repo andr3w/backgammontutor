@@ -25,6 +25,7 @@ const solved = (() => {
 const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(solved)); } catch {} };
 
 const MS = 280;   // how long a checker takes to reach its point
+const TAP = 10;   // px of drift still counted as a tap, as in nav.js
 
 const CALL = {
   good: 'Well done.',
@@ -44,10 +45,27 @@ class Play {
     this.medal = section.querySelector('.medal');
     this.key = location.pathname + '#' + this.q.id;
 
-    this.area.addEventListener('click', e => {
-      const t = e.target;
-      if (t.dataset && t.dataset.dice) this.swap();
-      else if (t.dataset && t.dataset.p) this.tap(t.dataset.p);
+    // Pointer events, not click. The board sets `touch-action: none` so its
+    // gestures can drive the pager, and a touch that drifts past the browser's
+    // slop threshold then yields no synthesised click at all -- the tap
+    // highlight flashes and nothing happens. A mouse never drifts, so this is
+    // invisible on a desktop. The usual advice against hand-rolling taps is
+    // about not breaking scrolling over an interactive element; this element
+    // is deliberately not a scrolling surface, so it does not apply.
+    let down = null;
+    this.area.addEventListener('pointerdown', e => {
+      down = { target: e.target, x: e.clientX, y: e.clientY };
+    });
+    this.area.addEventListener('pointercancel', () => { down = null; });
+    this.area.addEventListener('pointerup', e => {
+      const d = down;
+      down = null;
+      if (!d) return;
+      if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > TAP) return;  // a swipe; nav.js has it
+      const t = d.target;
+      if (!t || !t.dataset) return;
+      if (t.dataset.dice) this.swap();
+      else if (t.dataset.p) this.tap(t.dataset.p);
     });
     this.undoBtn.addEventListener('click', () => this.undo());
 
