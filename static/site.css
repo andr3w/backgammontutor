@@ -186,7 +186,7 @@ h1 { font-size: 1.8rem; line-height: 1.15; margin: 0 0 1.25rem; letter-spacing: 
 }
 .medal-slot.won a { color: var(--ink); }
 .medals .roll { font: 0.72rem/1 ui-monospace, monospace; }
-.onward-wrap { margin-top: 1.75rem; }
+.onward-wrap { margin-top: 1.75rem; display: flex; flex-wrap: wrap; gap: 0.6rem; }
 .onward {
   display: inline-block; padding: 0.6rem 1.2rem;
   border: 1px solid var(--accent); border-radius: 999px;

@@ -73,8 +73,11 @@ def index():
 def page(slug):
     if not SLUG.match(slug) or slug not in slugs():
         abort(404)
+    # Every page, not just this one: a page renders its recommendations with
+    # the titles of the pages they point at, so renaming any page can stale any
+    # other. A page build is fast enough that being exact costs nothing.
     return serve(ensure(BUILT / f"{slug}.html", slug,
-                        [PAGES / f"{slug}.mjs", *common()]))
+                        [*PAGES.glob("*.mjs"), *common()]))
 
 
 if __name__ == "__main__":

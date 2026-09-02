@@ -259,5 +259,5 @@ oxx.x.||x....o`,
     },
   }),
 */
-  prose`The other ten rolls are on the next page.`,
+  prose`Building is not always the answer. That is the next tutorial.`,
 ], { next: 'build_points_medium' });

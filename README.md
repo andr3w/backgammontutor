@@ -96,8 +96,15 @@ all of them (or the goals are under-specified). That check isn't written yet.
 | `pages/*.mjs` | one module per page — prose and questions |
 | `lib/board.mjs` | the `board` literal → 26-slot position → XGID |
 | `lib/kit.mjs` | `$m` hyperscript, `prose`, `page`, `question`, goals |
-| `lib/render.mjs` | board diagrams and HTML document rendering |
+| `lib/render.mjs` | the SVG board, and the page as a pager of screens |
+| `lib/check.mjs` | build-time analysis: is every question answerable, and answerable one way? |
+| `lib/goalfind.mjs` | authoring: the smallest goal sets that pin a chosen play |
+| `lib/design.mjs` | authoring: a position from counts, printed as a board literal |
+| `static/rules.mjs` | legal moves, maximal plays, notation — no DOM, so the build uses it too |
+| `static/goals.mjs` | what a goal means; shared by the grader and the checker |
+| `static/play.mjs` | tap to move, undo, grading, medals |
 | `build.mjs` | renders one page, or the contents index |
+| `verify.mjs` | asks gnubg whether the play a page accepts is the best play |
 | `server.py` | Flask; serves `built/<slug>.html`, rebuilding when stale |
 | `nginx.conf`, `uwsgi.ini` | deployment, symlinked into `sites-enabled` / `apps-enabled` |
 
@@ -138,7 +145,33 @@ Every position's XGID is checked by round-tripping it through gnubg and assertin
 the resulting Position ID, because XGID has no checksum: a typo produces a
 different legal position rather than an error.
 
-### Grading bands
+### Checking a page
+
+Two different questions, two different tools.
+
+`build.mjs` runs `checkPage` and refuses to write a page that fails it: a trap
+keyed to a play that is not legal, goals no play can meet, goals several plays
+meet. That proves a question is *answerable*, and answerable one way.
+
+It cannot tell you whether that answer is any good. Only an engine can:
+
+```sh
+node verify.mjs build_points_medium --gnubg     # GNUBG_SSH=host, default laalaa
+```
+
+For each question this prints gnubg's best play at 3-ply, whether the page
+accepts it, and the equity loss of the runner-up. That last number decides
+whether a question belongs on a page at all — if the second-best play is within
+0.020 the question is a coin toss, and marking it wrong is a lie. `--suggest`
+adds, for any question that fails, the goal sets that would have pinned gnubg's
+choice.
+
+Going the other way, `lib/goalfind.mjs` answers "I want this play to be the
+answer, what goals say so?" Paired with an engine it becomes a search: evaluate
+a batch of positions, keep the ones decided clearly, and ask which of those can
+be expressed as goals at all. That is how the medium page was written.
+
+## Grading bands
 
 Verdict is a function of equity loss against the best move:
 

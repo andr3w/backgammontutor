@@ -24,7 +24,11 @@ if (arg === '--index') {
   // Authoring mistakes are silent at runtime -- a trap keyed to an illegal
   // play just never fires -- so the build refuses to ship them.
   if (report(checkPage(page), arg)) process.exit(1);
-  writeFileSync(new URL(`built/${arg}.html`, here), renderPage(page));
+  // A recommendation is rendered with the title of the page it points at, so
+  // those pages have to be loaded too.
+  const titles = Object.fromEntries(await Promise.all(
+    page.next.filter(s => slugs().includes(s)).map(async s => [s, (await load(s)).title])));
+  writeFileSync(new URL(`built/${arg}.html`, here), renderPage(page, titles));
   console.error(`built/${arg}.html`);
 } else {
   console.error('usage: build.mjs <slug> | --index');
