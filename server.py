@@ -34,7 +34,15 @@ def ensure(target, arg, sources):
 
 
 def common():
-    return [*LIB.glob("*.mjs"), BUILDER]
+    """Anything whose change invalidates every built page.
+
+    static/ counts: asset URLs are stamped with their mtime at build time, so a
+    CSS or JS edit has to be re-stamped into the HTML to defeat the year-long
+    immutable cache.
+    """
+    static = ROOT / "static"
+    return [*LIB.glob("*.mjs"), BUILDER,
+            *static.glob("*.css"), *static.glob("*.js")]
 
 
 def serve(path):

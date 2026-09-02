@@ -6,21 +6,76 @@
   :root { --ink:#e8e3da; --dim:#a29a8d; --rule:#3a3630; --bg:#191714; --panel:#211e1a; --accent:#d9a066; }
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink);
-  font: 16px/1.65 Georgia, "Times New Roman", serif; }
-main { max-width: 40rem; margin: 0 auto; padding: 3rem 1.25rem 6rem; }
-h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 1.5rem; letter-spacing: -0.01em; }
-p { margin: 0 0 1.15rem; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 16px/1.6 Georgia, "Times New Roman", serif;
+  overflow: hidden;                 /* the pager owns scrolling, not the body */
+}
+
+/* ---- the pager: one screen per question ---- */
+.pager {
+  height: 100dvh; overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
+}
+.screen {
+  height: 100dvh; scroll-snap-align: start; scroll-snap-stop: always;
+  display: flex; flex-direction: column;
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+
+/* ---- board: pinned, owns its own gestures ---- */
+.board-area {
+  flex: 0 0 auto;
+  touch-action: none;               /* swipes here navigate, they don't scroll */
+  -webkit-user-select: none; user-select: none;
+  padding: 1.25rem 1rem 0.75rem;
+  display: flex; flex-direction: column; align-items: center;
+  border-bottom: 1px solid var(--rule);
+  background: var(--panel);
+}
+.board {
+  margin: 0; white-space: pre; overflow-x: auto; max-width: 100%;
+  font: clamp(11px, 3.4vw, 15px)/1.35 ui-monospace, "DejaVu Sans Mono", monospace;
+}
+.dice {
+  margin: 0.75rem 0 0; font-weight: bold; letter-spacing: 0.06em;
+  text-transform: uppercase; font-size: 0.75rem; color: var(--accent);
+}
+
+/* ---- discussion: scrolls on its own, never chains out to the pager ---- */
+.discussion {
+  flex: 1 1 auto; min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;     /* this is what keeps the board in place */
+  -webkit-overflow-scrolling: touch;
+}
+.discussion-inner, .text-inner { max-width: 34rem; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+.screen-text { justify-content: center; overflow-y: auto; overscroll-behavior: contain; }
+.text-inner { padding-bottom: 1.5rem; }
+
+h1 { font-size: 1.8rem; line-height: 1.15; margin: 0 0 1.25rem; letter-spacing: -0.01em; }
+p { margin: 0 0 1rem; }
 strong { color: var(--accent); }
-.question { margin: 2.5rem 0; padding: 1.25rem 1.4rem 1rem; background: var(--panel);
-  border: 1px solid var(--rule); border-radius: 6px; }
-.board { margin: 0 auto; overflow-x: auto; font: 13px/1.35 ui-monospace, "DejaVu Sans Mono", monospace;
-  color: var(--ink); white-space: pre; }
-.dice { margin: 1rem 0 0.25rem; font-weight: bold; letter-spacing: 0.04em;
-  text-transform: uppercase; font-size: 0.8rem; color: var(--accent); }
-.question p { margin: 0.4rem 0 0; }
-.answer { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--rule);
-  color: var(--dim); font-size: 0.85rem; font-style: italic; }
+.placeholder { color: var(--dim); font-style: italic; font-size: 0.9rem; }
 .toc { list-style: none; padding: 0; }
-.toc li { margin: 0.5rem 0; }
-.toc a, a { color: var(--accent); }
+.toc li { margin: 0.6rem 0; }
+a, .toc a { color: var(--accent); }
+
+/* ---- position readout ---- */
+.progress {
+  position: fixed; right: 0.5rem; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 0.45rem; z-index: 5;
+}
+.progress i {
+  display: block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--rule); transition: background 0.2s, transform 0.2s;
+}
+.progress i.on { background: var(--accent); transform: scale(1.5); }
+
+@media (min-width: 48rem) {
+  .board { font-size: 15px; }
+  .board-area { padding-top: 2rem; }
+}
