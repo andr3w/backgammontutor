@@ -236,4 +236,4 @@ bar o1`,
   }),
 
   prose`Loose, attack. Anchored, build.`,
-]);
+], { next: 'duplication' });

@@ -158,6 +158,9 @@ come in two kinds, and the spelling says which.
 | | `blot(p)` | exactly one |
 | | `clear(p)` | none of yours on it |
 | | `shots(n)` | how many of your blots he can reach with one die |
+| | `numbers(n)` | how many different die numbers hit something of yours |
+| | `prime(n)` | consecutive points held, at least this many |
+| | `board(n)` | points made in your own home board, at least this many |
 | **event** | `hits(p)` | his blot there goes to the bar |
 | | `escapes(p)` | a checker of yours leaves that point, deep in his territory |
 

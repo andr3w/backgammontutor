@@ -102,6 +102,32 @@ export function plays(pos, side, dice) {
 /** Points where `side` has a lone checker. */
 export const blots = (pos, side) => own(pos, side).filter(([, n]) => n === 1).map(([p]) => p);
 
+/**
+ * Which single die numbers hit something of `side`.
+ *
+ * This is the reading duplication is about: two blots behind the same number
+ * are one shot, two blots behind different numbers are two. Direct shots only
+ * -- combinations matter but they are not what the idea is for.
+ *
+ * A checker on the bar has to come in before it can do anything else, so when
+ * the opponent is on the bar only the entering numbers count.
+ */
+export function hitNumbers(pos, side) {
+  const o = opp(side), fwd = step1(o);
+  const nums = new Set();
+  const targets = blots(pos, side);
+  if (pos.bar[o]) {
+    for (let d = 1; d <= 6; d++) if (targets.includes(entryPoint(o, d))) nums.add(d);
+    return nums;
+  }
+  for (const p of targets)
+    for (const [q] of own(pos, o)) {
+      const d = (p - q) * fwd;
+      if (d >= 1 && d <= 6) nums.add(d);
+    }
+  return nums;
+}
+
 /** How many of `side`'s blots the opponent can reach with a single die. */
 export function directShots(pos, side) {
   const o = opp(side), fwd = step1(o);

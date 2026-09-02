@@ -26,6 +26,9 @@ export function meets(g, before, after, side) {
   if (g.kind === 'prime') return R.primeLength(after, side) >= g.arg;
   if (g.kind === 'board') return R.boardPoints(after, side) >= g.arg;
   if (g.kind === 'shots') return R.directShots(after, side) === g.arg;
+  // numbers: how many different die numbers hit you. Exact, like shots -- the
+  // whole point of duplication is the difference between one and two.
+  if (g.kind === 'numbers') return R.hitNumbers(after, side).size === g.arg;
 
   // --- event: what the play did on the way ----------------------------
   //
@@ -75,6 +78,13 @@ export function missed(g, before, after, side) {
   }
   if (g.kind === 'hits') return `<p>There is a checker of his on the ${g.arg} point, and you left it there.</p>`;
   if (g.kind === 'escapes') return `<p>A checker on the ${g.arg} point wanted to leave.</p>`;
+  if (g.kind === 'numbers') {
+    const ns = [...R.hitNumbers(after, side)].sort();
+    return ns.length === 0
+      ? '<p>That play was meant to leave him a shot.</p>'
+      : `<p>He hits you with ${ns.length === 1 ? 'one number' : ns.length + ' different numbers'}`
+        + ` — ${ns.join('s, ')}s. There is a way to leave him fewer.</p>`;
+  }
   if (g.kind === 'shots') {
     const n = R.directShots(after, side);
     return n === 0
