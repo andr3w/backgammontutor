@@ -70,6 +70,8 @@
 
   // --- keyboard -------------------------------------------------------
   addEventListener('keydown', e => {
+    // a focused nav button already answers Space and Enter itself
+    if (e.target.closest && e.target.closest('button')) return;
     const k = e.key;
     if (k === 'PageDown' || k === ' ') { step(1); e.preventDefault(); }
     else if (k === 'PageUp') { step(-1); e.preventDefault(); }
@@ -77,15 +79,38 @@
     else if (k === 'End') { go(screens.length - 1); e.preventDefault(); }
   });
 
-  // --- position readout -----------------------------------------------
-  const dots = document.createElement('nav');
-  dots.className = 'progress';
+  // --- position readout, with prev/next always in view -------------------
+  // The buttons are not a convenience: a text screen has no board to swipe,
+  // and a discussion that fills its screen swallows the gesture, so without
+  // them a touch user can be left with no way off a screen at all.
+  const bar = document.createElement('nav');
+  bar.className = 'progress';
+  bar.setAttribute('aria-label', 'Question navigation');
+
+  const button = (label, glyph, d) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = glyph;
+    b.setAttribute('aria-label', label);
+    b.addEventListener('click', () => step(d));
+    return b;
+  };
+  const prev = button('Previous', '\u2191', -1);
+  const next = button('Next', '\u2193', 1);
+
+  const dots = document.createElement('div');
+  dots.className = 'dots';
   dots.setAttribute('aria-hidden', 'true');
   screens.forEach(() => dots.appendChild(document.createElement('i')));
-  document.body.appendChild(dots);
+
+  bar.append(prev, dots, next);
+  document.body.appendChild(bar);
+
   const paint = () => {
     const c = current();
     [...dots.children].forEach((d, i) => d.classList.toggle('on', i === c));
+    prev.disabled = c === 0;
+    next.disabled = c === screens.length - 1;
   };
   pager.addEventListener('scroll', () => requestAnimationFrame(paint), { passive: true });
   paint();

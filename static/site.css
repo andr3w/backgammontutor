@@ -53,8 +53,16 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 .discussion-inner, .text-inner { max-width: 34rem; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
-.screen-text { justify-content: center; overflow-y: auto; overscroll-behavior: contain; }
 .text-inner { padding-bottom: 1.5rem; }
+
+/* A text screen has no board to swipe, so its swipe must reach the pager.
+   It stays a scroll container for the rare over-long screen, but chains
+   instead of containing -- `contain` here made the first screen a trap with
+   no way off it on a touch device. */
+.screen-text {
+  justify-content: center;
+  overflow-y: auto; overscroll-behavior-y: auto;
+}
 
 h1 { font-size: 1.8rem; line-height: 1.15; margin: 0 0 1.25rem; letter-spacing: -0.01em; }
 p { margin: 0 0 1rem; }
@@ -64,16 +72,36 @@ strong { color: var(--accent); }
 .toc li { margin: 0.6rem 0; }
 a, .toc a { color: var(--accent); }
 
-/* ---- position readout ---- */
+/* ---- position readout and the always-visible prev/next ---- */
 .progress {
-  position: fixed; right: 0.5rem; top: 50%; transform: translateY(-50%);
-  display: flex; flex-direction: column; gap: 0.45rem; z-index: 5;
+  position: fixed; right: 0.35rem; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+  z-index: 5;
 }
+.progress .dots { display: flex; flex-direction: column; gap: 0.45rem; padding: 0.15rem 0; }
 .progress i {
   display: block; width: 6px; height: 6px; border-radius: 50%;
   background: var(--rule); transition: background 0.2s, transform 0.2s;
 }
 .progress i.on { background: var(--accent); transform: scale(1.5); }
+
+.progress button {
+  -webkit-appearance: none; appearance: none;
+  width: 2.5rem; height: 2.5rem; padding: 0;
+  display: grid; place-items: center;
+  border: 1px solid var(--rule); border-radius: 50%;
+  background: var(--panel); color: var(--accent);
+  font: 1rem/1 system-ui, sans-serif;
+  cursor: pointer; touch-action: manipulation;
+  transition: opacity 0.2s, background 0.15s;
+}
+.progress button:active { background: var(--rule); }
+.progress button[disabled] { opacity: 0.25; cursor: default; }
+
+/* keep prose clear of the control on narrow screens */
+@media (max-width: 30rem) {
+  .discussion-inner, .text-inner { padding-right: 3.5rem; }
+}
 
 @media (min-width: 48rem) {
   .board { font-size: 15px; }
