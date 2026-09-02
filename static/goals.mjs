@@ -20,6 +20,11 @@ export function meets(g, before, after, side) {
   if (g.kind === 'made')  return mine(after) >= 2;
   if (g.kind === 'blot')  return mine(after) === 1;
   if (g.kind === 'clear') return mine(after) === 0;
+  // prime and board count what the play built. Both are "at least": a goal of
+  // prime(4) is met by a five prime, because a student who did better than
+  // asked has not failed.
+  if (g.kind === 'prime') return R.primeLength(after, side) >= g.arg;
+  if (g.kind === 'board') return R.boardPoints(after, side) >= g.arg;
   if (g.kind === 'shots') return R.directShots(after, side) === g.arg;
 
   // --- event: what the play did on the way ----------------------------
@@ -58,6 +63,16 @@ export function missed(g, before, after, side) {
       : `<p>The ${g.arg} point has to go.</p>`;
   }
   if (g.kind === 'blot') return `<p>The ${g.arg} point wants exactly one checker on it.</p>`;
+  if (g.kind === 'prime') {
+    const n = R.primeLength(after, side);
+    return `<p>That leaves you ${n} point${n === 1 ? '' : 's'} in a row. There are
+      ${g.arg} to be had.</p>`;
+  }
+  if (g.kind === 'board') {
+    const n = R.boardPoints(after, side);
+    return `<p>That leaves ${n} point${n === 1 ? '' : 's'} made in your home board.
+      You can have ${g.arg}.</p>`;
+  }
   if (g.kind === 'hits') return `<p>There is a checker of his on the ${g.arg} point, and you left it there.</p>`;
   if (g.kind === 'escapes') return `<p>A checker on the ${g.arg} point wanted to leave.</p>`;
   if (g.kind === 'shots') {

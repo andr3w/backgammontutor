@@ -116,6 +116,20 @@ export function directShots(pos, side) {
   return n;
 }
 
+/** The longest run of consecutive points `side` holds. */
+export function primeLength(pos, side) {
+  const h = held(pos, side);
+  let best = 0, run = 0;
+  for (let p = 1; p <= 24; p++) {
+    if (h.has(p)) { run++; if (run > best) best = run; } else run = 0;
+  }
+  return best;
+}
+
+/** How many points of its own home board `side` holds. */
+export const boardPoints = (pos, side) =>
+  [...held(pos, side)].filter(p => offDist(side, p) <= 6).length;
+
 /** Points held by `side` with two or more checkers. */
 export const held = (pos, side) => new Set(own(pos, side).filter(([, n]) => n >= 2).map(([p]) => p));
 

@@ -253,4 +253,4 @@ o...x.||x.x..o`,
   }),
 
   prose`Building is the default. Look for a reason not to.`,
-]);
+], { next: ['blitz', 'prime'] });
