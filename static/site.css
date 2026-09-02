@@ -1,0 +1,26 @@
+:root {
+  --ink: #1c1a17; --dim: #5d574e; --rule: #d8d2c6;
+  --bg: #faf8f4; --panel: #fff; --accent: #7a4a1e;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e8e3da; --dim:#a29a8d; --rule:#3a3630; --bg:#191714; --panel:#211e1a; --accent:#d9a066; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.65 Georgia, "Times New Roman", serif; }
+main { max-width: 40rem; margin: 0 auto; padding: 3rem 1.25rem 6rem; }
+h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 1.5rem; letter-spacing: -0.01em; }
+p { margin: 0 0 1.15rem; }
+strong { color: var(--accent); }
+.question { margin: 2.5rem 0; padding: 1.25rem 1.4rem 1rem; background: var(--panel);
+  border: 1px solid var(--rule); border-radius: 6px; }
+.board { margin: 0 auto; overflow-x: auto; font: 13px/1.35 ui-monospace, "DejaVu Sans Mono", monospace;
+  color: var(--ink); white-space: pre; }
+.dice { margin: 1rem 0 0.25rem; font-weight: bold; letter-spacing: 0.04em;
+  text-transform: uppercase; font-size: 0.8rem; color: var(--accent); }
+.question p { margin: 0.4rem 0 0; }
+.answer { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--rule);
+  color: var(--dim); font-size: 0.85rem; font-style: italic; }
+.toc { list-style: none; padding: 0; }
+.toc li { margin: 0.5rem 0; }
+.toc a, a { color: var(--accent); }

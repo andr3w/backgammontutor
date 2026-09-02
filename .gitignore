@@ -1,0 +1,13 @@
+# secrets — never commit
+.token.txt
+*.token
+.env
+
+# generated
+built/
+__pycache__/
+*.pyc
+
+# local environment
+venv/
+tmp.js
