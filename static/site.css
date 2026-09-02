@@ -250,3 +250,73 @@ a, .toc a { color: var(--accent); }
   .board { font-size: 15px; }
   .board-area { padding-top: 2rem; }
 }
+
+
+/* ---- glossary ---------------------------------------------------------- */
+
+a.gloss {
+  color: inherit; text-decoration: none;
+  border-bottom: 1px dotted var(--accent);
+  cursor: pointer;
+}
+a.gloss:active { background: var(--lit); }
+
+/* The pane covers the window: the board behind it is not the thing being
+   read, and half-covering it would leave the student peering round an edge. */
+.gloss-pane {
+  position: fixed; inset: 0; z-index: 40;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+}
+.gloss-pane[hidden] { display: none; }
+body.gloss-open { overflow: hidden; }
+
+.gloss-head {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: calc(0.9rem + env(safe-area-inset-top)) 1rem 0.9rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--panel);
+}
+.gloss-head h2 { margin: 0; font-size: 1.1rem; flex: 1 1 auto; }
+.gloss-open {
+  font: 0.8rem/1 system-ui, sans-serif; color: var(--accent);
+  text-decoration: none; border: 1px solid var(--rule);
+  border-radius: 999px; padding: 0.45rem 0.85rem;
+}
+.gloss-close {
+  -webkit-appearance: none; appearance: none;
+  width: 2.2rem; height: 2.2rem; padding: 0;
+  border: 1px solid var(--rule); border-radius: 50%;
+  background: transparent; color: var(--ink);
+  font: 1.2rem/1 system-ui, sans-serif; cursor: pointer;
+  touch-action: manipulation;
+}
+
+.gloss-body {
+  flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; overscroll-behavior: contain;
+  padding: 1.25rem 1.25rem calc(3rem + env(safe-area-inset-bottom));
+}
+.gloss-page { height: 100dvh; display: flex; flex-direction: column; }
+
+.gloss-list { max-width: 34rem; margin: 0 auto; }
+.gloss-list dt {
+  font-weight: bold; color: var(--accent);
+  margin: 1.4rem 0 0.2rem; scroll-margin-top: 1rem;
+}
+.gloss-list dt:first-child { margin-top: 0; }
+.gloss-list dd { margin: 0; }
+.gloss-list .see, .gloss-list .src {
+  display: inline; font-size: 0.82rem; color: var(--dim);
+}
+.gloss-list .see { margin-left: 0.4rem; }
+.gloss-list .src {
+  margin-left: 0.4rem; text-decoration: none;
+  border-bottom: 1px dotted var(--rule);
+}
+
+/* what you came for, held for a moment */
+.gloss-list dt.here, .gloss-list dd.here { background: var(--lit); }
+.gloss-list dt.here { box-shadow: -0.5rem 0 0 var(--lit); }
+.gloss-list dd.here { box-shadow: -0.5rem 0 0 var(--lit), 0.5rem 0 0 var(--lit); }

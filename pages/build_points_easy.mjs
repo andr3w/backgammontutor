@@ -17,8 +17,8 @@ o...x.||x....o`;
 
 export default page('Build points (easy)', [
 
-  prose`**If the roll makes a point, make it.** A point is permanent. The point
-    you make now is still working for you twenty rolls from now.`,
+  prose`**If the roll makes a point, make it.** A [[made point|point]] is permanent.
+    The point you make now is still working for you twenty rolls from now.`,
 
   question({
     id: 'open-31',
@@ -27,13 +27,13 @@ export default page('Build points (easy)', [
     ask: prose`How do you play 3-1?`,
     goals: [
       made(5, prose`You've made the 5-point.
-                     This is the best point on the board - so good it's called the "golden point".`,
+                     This is the best point on the board - so good it's called the [[golden point]].`,
                prose`Don't throw away a chance to make the 5-point.`),
     ],
     traps: {
       '24/23 13/10': prose`A reasonable shape with almost any other roll. Here it
         turns down the best point on the board.`,
-      '24/20': prose`The four point anchor is worth having, but not at this
+      '24/20': prose`The four point [[anchor]] is worth having, but not at this
         price — and one checker there is not an anchor.`,
       '13/9': prose`Aims at the five point. You were offered it.`,
     },
@@ -47,13 +47,13 @@ export default page('Build points (easy)', [
     dice: [4, 2],
     ask: prose`And 4-2?`,
     goals: [
-      made(4, prose`You've made home board point.`, `You have a chance to make a point in your home board.`),
+      made(4, prose`You've made a [[home board]] point.`, `You have a chance to make a point in your [[home board]].`),
       shots(0),
     ],
     traps: {
       '13/11 13/9': prose`Aims at the four point. It is yours right now if you
         take it.`,
-      '24/20 13/11': prose`Starts the four point anchor. Making the four point
+      '24/20 13/11': prose`Starts the four point [[anchor]]. Making the four point
         outright is better than starting to.`,
     },
   }),
@@ -64,8 +64,8 @@ export default page('Build points (easy)', [
     dice: [6, 1],
     ask: prose`And 6-1?`,
     goals: [
-      made(7, prose`You made the bar point. You are starting to trap your opponent's back pieces.`,
-               prose`You have a chance to build on the bar point (the 7-point). You should do that.`),
+      made(7, prose`You made the [[bar point]]. You are starting to trap your opponent's [[back checkers]].`,
+               prose`You have a chance to build on the [[bar point]] (the 7-point). You should do that.`),
       shots(0),
     ],
     traps: {
@@ -84,7 +84,7 @@ export default page('Build points (easy)', [
     goals: [
       made(3, prose`You built on the three point, even though it's not the
                best place to build this is still the best move for this opening throw.`,
-               prose`You have a chance to build inside your home board - you must do that.`),
+               prose`You have a chance to build inside your [[home board]] - you must do that.`),
       shots(0),
     ],
     traps: {
@@ -184,9 +184,9 @@ o...x.||x....o`,
         3-point. A long way to go to build, and still worth it.`,
         prose`Four fives will build a point if you send the same two checkers
         twice.`),
-      made(8, prose`And the 8-point is still yours.`,
-        prose`You built the 3-point by taking the 8-point apart. Keep what you
-        already own.`),
+      made(8, prose`And the [[made point|8-point]] is still yours.`,
+        prose`You built the 3-point by [[break a point|taking the 8-point apart]]. Keep
+        what you already own.`),
     ],
   }),
 

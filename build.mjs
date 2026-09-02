@@ -2,8 +2,8 @@
 // node build.mjs <slug>     -> built/<slug>.html
 // node build.mjs --index    -> built/index.html
 import { readdirSync, writeFileSync, mkdirSync } from 'node:fs';
-import { renderPage, renderIndex } from './lib/render.mjs';
-import { checkPage, report } from './lib/check.mjs';
+import { renderPage, renderIndex, renderGlossary } from './lib/render.mjs';
+import { checkPage, checkGlossary, report } from './lib/check.mjs';
 
 const here = new URL('.', import.meta.url);
 const arg = process.argv[2];
@@ -14,7 +14,10 @@ const slugs = () => readdirSync(new URL('pages/', here))
 
 const load = s => import(new URL(`pages/${s}.mjs`, here)).then(m => m.default);
 
-if (arg === '--index') {
+if (arg === '--glossary') {
+  writeFileSync(new URL('built/glossary.html', here), renderGlossary());
+  console.error('built/glossary.html');
+} else if (arg === '--index') {
   const pages = await Promise.all(slugs().map(async s => ({ slug: s, title: (await load(s)).title })));
   writeFileSync(new URL('built/index.html', here), renderIndex(pages));
   console.error('built/index.html');
@@ -23,7 +26,7 @@ if (arg === '--index') {
   const page = await load(arg);
   // Authoring mistakes are silent at runtime -- a trap keyed to an illegal
   // play just never fires -- so the build refuses to ship them.
-  if (report(checkPage(page), arg)) process.exit(1);
+  if (report([...checkPage(page), ...checkGlossary(page)], arg)) process.exit(1);
   // A recommendation is rendered with the title of the page it points at, so
   // those pages have to be loaded too.
   const titles = Object.fromEntries(await Promise.all(
@@ -31,6 +34,6 @@ if (arg === '--index') {
   writeFileSync(new URL(`built/${arg}.html`, here), renderPage(page, titles));
   console.error(`built/${arg}.html`);
 } else {
-  console.error('usage: build.mjs <slug> | --index');
+  console.error('usage: build.mjs <slug> | --index | --glossary');
   process.exit(2);
 }

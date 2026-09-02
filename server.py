@@ -69,6 +69,11 @@ def index():
                         [*PAGES.glob("*.mjs"), *common()]))
 
 
+@app.route("/glossary")
+def glossary():
+    return serve(ensure(BUILT / "glossary.html", "--glossary", common()))
+
+
 @app.route("/<slug>")
 def page(slug):
     if not SLUG.match(slug) or slug not in slugs():

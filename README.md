@@ -97,6 +97,7 @@ all of them (or the goals are under-specified). That check isn't written yet.
 | `lib/board.mjs` | the `board` literal → 26-slot position → XGID |
 | `lib/kit.mjs` | `$m` hyperscript, `prose`, `page`, `question`, goals |
 | `lib/render.mjs` | the SVG board, and the page as a pager of screens |
+| `lib/glossary.mjs` | the glossary: our definitions, each citing where to check it |
 | `lib/check.mjs` | build-time analysis: is every question answerable, and answerable one way? |
 | `lib/goalfind.mjs` | authoring: the smallest goal sets that pin a chosen play |
 | `lib/design.mjs` | authoring: a position from counts, printed as a board literal |
@@ -176,6 +177,28 @@ Goals are listed in order of importance. Meet them all and every `why` prints;
 fail and only the first failure speaks. A goal with no text of its own gets a
 generated sentence from the position, so `shots(0)` alone still says something
 true about the play.
+
+## Glossary
+
+`lib/glossary.mjs` holds every term the tutorials use. Write `[[blot]]` in any
+prose and it becomes a link; `[[point|made point]]` when the sentence wants a
+different word from the headword. The link carries a real `href` to `/glossary`
+so it works without JavaScript, and `static/gloss.mjs` upgrades the click into
+a pane over the page, scrolled to that entry. The build refuses a page that
+links to a term the glossary does not have.
+
+A tapped word opens the whole list, not one definition in a bubble. The
+neighbouring entries are the ones a student has not met, and landing among them
+is how they get met — so definitions link on to each other freely.
+
+The definitions are ours. The good glossaries on the web are under ordinary
+copyright — usbgf.org carries a bare © notice and offers no licence — and
+Wiktionary's is CC BY-SA, whose share-alike would attach to this page. Every
+entry cites a source instead, which costs nothing and is worth more than a
+copied sentence. Writing them ourselves also lets them be written for a student
+rather than a player: the USBGF defines *builder* as "a checker in range of a
+vacant or slotted point", which is correct and no use to someone who does not
+yet know any of those three words.
 
 ## Checking a page
 

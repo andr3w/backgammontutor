@@ -3,9 +3,9 @@ import { board } from '../lib/board.mjs';
 
 export default page('Build points (medium)', [
 
-  prose`**Build if you can — unless something is worth more.** A checker of his
-    left alone, a checker of yours that wants to get out, a roll with nothing
-    safe about it.`,
+  prose`**Build if you can — unless something is worth more.** A [[blot|checker of
+    his left alone]], a [[back checkers|checker of yours that wants to get
+    out]], a roll with nothing [[safe]] about it.`,
 
   question({
     id: 'med-head',
@@ -24,7 +24,7 @@ o...x.||xo...o`,
     dice: [3, 1],
     ask: prose`He has crept out to your 5-point.`,
     goals: [
-      made(5, prose`The golden point, made right on top of him.`,
+      made(5, prose`The [[golden point]], made right on top of him.`,
         prose`The 5-point is there for the taking, as it always is.`),
       hits(5, prose`He goes back to the far corner and starts again.`,
         prose`Do not let him sit there.`),
@@ -48,8 +48,8 @@ o...x.||x....o`,
     dice: [2, 2],
     ask: prose`Four twos, and two of his checkers standing alone.`,
     goals: [
-      hits(20, prose`Your back checkers walk onto him and he is on the bar.`,
-        prose`There is a checker of his alone on the 20-point, and you can reach it.`),
+      hits(20, prose`Your [[back checkers]] walk onto him and he is on the [[bar]].`,
+        prose`There is a [[blot|checker of his alone]] on the 20-point, and you can reach it.`),
       made(4, prose`Two more twos make the 4-point while he is not looking.`,
         prose`You had four twos. Hitting used only two of them.`),
     ],
@@ -74,7 +74,7 @@ o..xx.||x....o`,
     goals: [
       hits(21, prose`One checker, three pips, and he is on the bar. There was a
         point you could have made instead. It was not worth as much.`,
-        prose`He has a checker alone on the 21-point. Send it home.`),
+        prose`He has a [[blot]] on the 21-point. Send it home.`),
     ],
   }),
 
@@ -97,7 +97,7 @@ ox..x.||x....o`,
     goals: [
       hits(18, prose`Your back checker steps up and knocks him off. He loses the
         roll, and yours is out of the corner.`,
-        prose`There is a checker of his standing alone on the 18-point.`),
+        prose`There is a [[blot]] on the 18-point.`),
     ],
   }),
 
@@ -142,7 +142,7 @@ o..xx.||x....o`,
     ask: prose`Both of his stragglers are alone.`,
     goals: [
       hits(21, prose`You hit on the 21-point,`,
-        prose`Two of his checkers are standing alone and you can reach both.`),
+        prose`Two of his [[blot|blots]] are standing alone and you can reach both.`),
       hits(20, prose`and on the 20-point as well. Two on the bar, and a board of
         his own in the way when they come back.`,
         prose`One hit is good. Look again — there are two.`),
@@ -166,11 +166,11 @@ o..xxo||x....o`,
     dice: [6, 5],
     ask: prose`He is on your bar point again, and nothing reaches him safely.`,
     goals: [
-      hits(7, prose`Hit anyway. He loses his roll, and a checker on the bar is
+      hits(7, prose`[[hit|Hit]] anyway. He loses his roll, and a checker on the [[bar]] is
         worth more than a tidy position.`,
         prose`He is sitting on your bar point and you left him there.`),
-      shots(1, prose`You are open on the bar point now. One checker of his can
-        answer, and that is the price.`,
+      shots(1, prose`You are open on the [[bar point]] now. One checker of his gets a
+        [[return shot]], and that is the price.`,
         prose`Hitting is right; the other five is in the wrong place.`),
     ],
   }),
@@ -190,11 +190,11 @@ o...x.||x.....
 o...x.||x....o
 o...x.||x....o`,
     dice: [4, 3],
-    ask: prose`Your two back checkers are apart.`,
+    ask: prose`Your two [[back checkers]] are apart.`,
     goals: [
-      made(20, prose`Together on the 20-point. Safe there, and squarely in the
-        way of everything he wants to bring home.`,
-        prose`Your two back checkers can meet on the same point.`),
+      made(20, prose`Together on the 20-point — an [[advanced anchor]]. Safe there, and squarely
+        in the way of everything he wants to bring home.`,
+        prose`Your two back checkers can meet on the same point, giving you an [[anchor]].`),
     ],
   }),
 
@@ -215,10 +215,10 @@ ox.xx.||xo...o`,
     dice: [6, 5],
     ask: prose`6-5, and a long way to go.`,
     goals: [
-      escapes(24, prose`One checker runs the whole way to your own 13-point.
+      escapes(24, prose`One checker [[run|runs]] the whole way to your own [[mid point]].
         The hardest job in the game, done in a single roll.`,
-        prose`A back checker can get right out with this roll.`),
-      shots(1, prose`It leaves the other one alone for a roll. Take that trade.`,
+        prose`A [[back checkers|back checker]] can [[escape]] with this roll.`),
+      shots(1, prose`It leaves the other one a [[blot]] for a roll. Take that trade.`,
         prose`Run one of them right out. Do not fiddle about.`),
     ],
   }),
@@ -242,9 +242,9 @@ o...x.||x.x..o`,
     goals: [
       made(4, prose`One checker comes all the way down and covers the blot on
         your 4-point.`,
-        prose`You have a checker standing alone on your 4-point.`),
-      shots(0, prose`Nothing of yours can be touched.`,
-        prose`You left something where he can reach it.`),
+        prose`You have a [[blot]] on your 4-point.`),
+      shots(0, prose`Nothing of yours can be [[hit]].`,
+        prose`You left a [[blot]] where he can reach it.`),
     ],
   }),
 
