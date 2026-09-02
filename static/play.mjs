@@ -256,4 +256,33 @@ class Play {
   }
 }
 
-for (const s of document.querySelectorAll('.screen-question[data-q]')) new Play(s);
+const games = [...document.querySelectorAll('.screen-question[data-q]')].map(s => new Play(s));
+
+// The ending, filled in here because only the browser knows what this reader
+// has solved. It doubles as a way back: the rolls still to find are links.
+const end = document.querySelector('.screen-end');
+if (end && games.length) {
+  // Two questions on a page can share a roll, so say which one only when the
+  // roll alone would not.
+  const roll = g => g.q.dice.join('-');
+  const label = g => (games.filter(x => roll(x) === roll(g)).length > 1
+    ? `${roll(g)} (${games.indexOf(g) + 1})` : roll(g));
+  const score = end.querySelector('.score');
+  const list = end.querySelector('.unsolved');
+  const paint = () => {
+    const left = games.filter(g => !solved[g.key]);
+    const done = games.length - left.length;
+    score.textContent = left.length
+      ? `${done} of ${games.length} solved. Still to find:`
+      : `\u2605  All ${games.length} solved.`;
+    end.classList.toggle('won', !left.length);
+    list.replaceChildren(...left.map(g => $m('li',
+      $m('a', {
+        href: '#' + g.q.id,
+        onclick: e => { e.preventDefault(); g.section.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
+      }, label(g)))));
+    list.hidden = !left.length;
+  };
+  document.addEventListener('bg:progress', paint);
+  paint();
+}

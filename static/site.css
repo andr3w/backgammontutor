@@ -151,6 +151,33 @@ body {
 }
 
 h1 { font-size: 1.8rem; line-height: 1.15; margin: 0 0 1.25rem; letter-spacing: -0.01em; }
+
+/* The title and the page's opening words ride in the first question's
+   discussion, so that a board is the first thing on the screen. */
+.lead { margin-bottom: 1.5rem; }
+.lead h1 { font-size: 1.45rem; margin-bottom: 0.6rem; }
+.lead p { color: var(--dim); }
+.lead p strong { color: var(--accent); }
+
+/* ---- the ending ---- */
+.screen-end .score { font-size: 1.15rem; margin-bottom: 0.75rem; }
+.screen-end.won .score { color: var(--yes); }
+.unsolved {
+  list-style: none; padding: 0; margin: 0 0 1.5rem;
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+}
+.unsolved a {
+  display: block; padding: 0.35rem 0.7rem;
+  border: 1px solid var(--rule); border-radius: 999px;
+  font: 0.85rem/1 ui-monospace, monospace; text-decoration: none;
+}
+.unsolved[hidden] { display: none; }
+.onward-wrap { margin-top: 1.75rem; }
+.onward {
+  display: inline-block; padding: 0.6rem 1.2rem;
+  border: 1px solid var(--accent); border-radius: 999px;
+  text-decoration: none; font-family: system-ui, sans-serif; font-size: 0.9rem;
+}
 p { margin: 0 0 1rem; }
 strong { color: var(--accent); }
 .placeholder { color: var(--dim); font-style: italic; font-size: 0.9rem; }
