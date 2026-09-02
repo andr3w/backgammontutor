@@ -26,9 +26,9 @@ export default page('Build if you can', [
     dice: [3, 1],
     ask: prose`How do you play 3-1?`,
     goals: [
-      makes(5, prose`The best point on the board. It guards your home board, and
-        it sits exactly where his back checkers want to land.`),
-      shots(0, prose`And it is free. You finish with no blot.`),
+      makes(5, prose`You've made the 5-point.
+                     This is the best point on the board - so good it's called the "golden point".`,
+               prose`Don't throw away a chance to make the 5-point.`),
     ],
     traps: {
       '24/23 13/10': prose`A reasonable shape with almost any other roll. Here it
@@ -47,8 +47,7 @@ export default page('Build if you can', [
     dice: [4, 2],
     ask: prose`And 4-2?`,
     goals: [
-      makes(4, prose`Second only to the five point. A home board point, and
-        safe.`),
+      makes(4, prose`You've made home board point.`, `You have a chance to make a point in your home board.`),
       shots(0),
     ],
     traps: {
@@ -65,8 +64,8 @@ export default page('Build if you can', [
     dice: [6, 1],
     ask: prose`And 6-1?`,
     goals: [
-      makes(7, prose`The bar point. Eight, seven and six — three points in a row.
-        His back checkers have to jump all three.`),
+      makes(7, prose`You made the bar point. You are starting to trap your opponent's back pieces.`,
+               prose`You have a chance to build on the bar point (the 7-point). You should do that.`),
       shots(0),
     ],
     traps: {
@@ -83,17 +82,12 @@ export default page('Build if you can', [
     dice: [5, 3],
     ask: prose`How about 5-3?`,
     goals: [
-      makes(3, prose`The three point is deep, and it buries two checkers. Make it
-        anyway. A point in hand beats a point in prospect.`),
+      makes(3, prose`You built on the three point, even though it's not the
+               best place to build this is still the best move for this opening throw.`,
+               prose`You have a chance to build inside your home board - you must do that.`),
       shots(0),
     ],
     traps: {
-      '24/21 13/8': prose`The closest thing to a real alternative on this page.
-        Still second.`,
-      '13/10 13/8': prose`Safe, and you have made nothing. He may make that point
-        next roll.`,
-      '13/5': prose`Eleven pips down the board, alone, on the point he most wants
-        to hit.`,
     },
   }),
 
@@ -114,7 +108,8 @@ o..xx.||x...oo`,
     dice: [3, 4],
     ask: prose`This second roll is great`,
     goals: [
-      makes(5,'This is the golden point - good job'),
+      makes(5,'You built on the 5 point, that is the best point on the whole board',
+              `You didn't make the 5 point when you could have.`),
     ],
     traps: {
     },

@@ -7,7 +7,7 @@ from flask import Flask, Response, abort, request
 ROOT = Path(__file__).resolve().parent
 PAGES, LIB, BUILT = ROOT / "pages", ROOT / "lib", ROOT / "built"
 BUILDER = ROOT / "build.mjs"
-SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+SLUG = re.compile(r"^[a-z0-9][a-z0-9_-]*$")   # file stems, so underscores count
 
 app = Flask(__name__, static_folder=str(ROOT / "static"), static_url_path="/static")
 

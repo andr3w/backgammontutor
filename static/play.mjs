@@ -11,6 +11,7 @@
 
 import { boardSvg, spot, GEO } from './board-svg.mjs';
 import * as R from './rules.mjs';
+import { decide, missed } from './goals.mjs';
 
 const $m = globalThis.$m;   // m.js, loaded as a classic script before this one
 
@@ -203,26 +204,37 @@ class Play {
     if (v.tone === 'good') this.win();
   }
 
+  /**
+   * Goals are listed in order of importance, and that order decides the
+   * feedback. Meet them all and every `why` is printed, in order. Fail and
+   * only the first failure speaks -- naming the biggest miss and then piling
+   * on the smaller ones is not how a teacher talks, and the student has
+   * already been told the answer is wrong.
+   */
   judge(move) {
-    const goals = (this.q.goals || []).map(g => ({ ...g, met: this.meets(g) }));
-    const judged = goals.filter(g => g.met !== null);
-    if (judged.length && judged.every(g => g.met))
-      return { tone: 'good', html: judged.map(g => g.why).filter(Boolean).join('') || '<p>That is the play.</p>' };
-    if (this.q.traps && this.q.traps[move])
-      return { tone: 'bad', html: this.q.traps[move] };
-    if (this.q.otherwise) return { tone: 'bad', html: this.q.otherwise };
-    // CLAUDE.md: a legal play with no stored analysis is not something to guess at.
-    console.warn('unanalysed play', this.q.id, move);
-    return { tone: 'unknown', html: '<p>This play has not been analysed yet.</p>' };
-  }
+    const decided = decide(this.q.goals, this.q.pos, this.pos, this.side);
 
-  /** true / false / null when the goal is not one we can decide structurally. */
-  meets(g) {
-    const before = this.q.pos, after = this.pos;
-    if (g.kind === 'makes')
-      return R.held(after, this.side).has(g.arg) && !R.held(before, this.side).has(g.arg);
-    if (g.kind === 'shots') return R.directShots(after, this.side) === g.arg;
-    return null;
+    // CLAUDE.md: a legal play with nothing to judge it against is not
+    // something to guess at.
+    if (!decided.length) {
+      console.warn('unanalysed play', this.q.id, move);
+      return { tone: 'unknown', html: '<p>This play has not been analysed yet.</p>' };
+    }
+
+    const failed = decided.find(g => !g.met);
+    if (!failed) return {
+      tone: 'good',
+      html: decided.map(g => g.why).filter(Boolean).join('') || '<p>That is the play.</p>',
+    };
+
+    // The reason first, then anything the page has to say about this exact
+    // play. General before specific, and never one without the other.
+    const trap = (this.q.traps || {})[move];
+    const html = [
+      failed.otherwise || this.q.otherwise || missed(failed, this.pos, this.side),
+      trap,
+    ].filter(Boolean).join('');
+    return { tone: 'bad', html };
   }
 }
 

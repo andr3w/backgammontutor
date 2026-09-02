@@ -3,6 +3,7 @@
 // node build.mjs --index    -> built/index.html
 import { readdirSync, writeFileSync, mkdirSync } from 'node:fs';
 import { renderPage, renderIndex } from './lib/render.mjs';
+import { checkPage, report } from './lib/check.mjs';
 
 const here = new URL('.', import.meta.url);
 const arg = process.argv[2];
@@ -19,7 +20,11 @@ if (arg === '--index') {
   console.error('built/index.html');
 } else if (arg) {
   if (!slugs().includes(arg)) { console.error(`no such page: ${arg}`); process.exit(2); }
-  writeFileSync(new URL(`built/${arg}.html`, here), renderPage(await load(arg)));
+  const page = await load(arg);
+  // Authoring mistakes are silent at runtime -- a trap keyed to an illegal
+  // play just never fires -- so the build refuses to ship them.
+  if (report(checkPage(page), arg)) process.exit(1);
+  writeFileSync(new URL(`built/${arg}.html`, here), renderPage(page));
   console.error(`built/${arg}.html`);
 } else {
   console.error('usage: build.mjs <slug> | --index');
