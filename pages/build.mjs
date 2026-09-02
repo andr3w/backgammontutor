@@ -15,10 +15,7 @@ o...x.||x.....
 o...x.||x....o
 o...x.||x....o`;
 
-export default page('Opening rolls everyone agrees on', [
-
-  prose`Five opening rolls have one right answer. Learn them and you never think
-    about them again.`,
+export default page('Build if you can', [
 
   prose`**If the roll makes a point, make it.** A point is permanent. The point
     you make now is still working for you twenty rolls from now.`,
@@ -101,6 +98,29 @@ export default page('Opening rolls everyone agrees on', [
   }),
 
   question({
+    id: '45-34',
+    board: board`
+xo..o.||o....x
+x...o.||o....x
+x...o.||o.....
+......||o.....
+......||o.....
+--------------
+......||x.....
+o...x.||x.....
+o...x.||x.....
+o...x.||x.....
+o..xx.||x...oo`,
+    dice: [3, 4],
+    ask: prose`This second roll is great`,
+    goals: [
+      makes(5,'This is the golden point - good job'),
+    ],
+    traps: {
+    },
+  }),
+/*
+  question({
     id: 'open-65',
     board: opening,
     dice: [6, 5],
@@ -117,6 +137,6 @@ export default page('Opening rolls everyone agrees on', [
         were.`,
     },
   }),
-
+*/
   prose`The other ten rolls are on the next page.`,
 ]);

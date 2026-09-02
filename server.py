@@ -42,7 +42,7 @@ def common():
     """
     static = ROOT / "static"
     return [*LIB.glob("*.mjs"), BUILDER,
-            *static.glob("*.css"), *static.glob("*.js")]
+            *static.glob("*.css"), *static.glob("*.js"), *static.glob("*.mjs")]
 
 
 def serve(path):
