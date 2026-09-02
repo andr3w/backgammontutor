@@ -108,10 +108,15 @@
 
   const paint = () => {
     const c = current();
-    [...dots.children].forEach((d, i) => d.classList.toggle('on', i === c));
+    [...dots.children].forEach((d, i) => {
+      d.classList.toggle('on', i === c);
+      d.classList.toggle('won', screens[i].classList.contains('won'));
+    });
     prev.disabled = c === 0;
     next.disabled = c === screens.length - 1;
   };
   pager.addEventListener('scroll', () => requestAnimationFrame(paint), { passive: true });
+  // play.mjs fires this when a question is solved, so the dots can show it
+  document.addEventListener('bg:progress', paint);
   paint();
 })();

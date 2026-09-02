@@ -5,7 +5,7 @@
   --frame: #6b4a2c; --felt: #e7dcc6;
   --pt-a: #b8834e; --pt-b: #8c5a30; --pt-num: #f0e6d2;
   --ck-x: #f4efe4; --ck-o: #2e2a26; --ck-count: #f4efe4;
-  --die: #f7f4ee; --die-pip: #26221e; --lit: #fffaea;
+  --die: #f7f4ee; --die-pip: #26221e; --lit: #fffaea; --yes: #4c7a3f;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -14,7 +14,7 @@
     --frame: #3a2a1c; --felt: #2b3a30;
     --pt-a: #7a5636; --pt-b: #4e3a26; --pt-num: #c8bba4;
     --ck-x: #e6ddcc; --ck-o: #1a1714;
-    --die: #ece7dd; --die-pip: #26221e; --lit: #ffe9b4;
+    --die: #ece7dd; --die-pip: #26221e; --lit: #ffe9b4; --yes: #8ab97a;
   }
 }
 * { box-sizing: border-box; }
@@ -93,6 +93,20 @@ body {
 .bg-board .die.spent { opacity: 0.25; }
 .bg-board .die.now .die-face { stroke: var(--accent); stroke-width: 0.9; }
 
+/* A medal sits on the board's corner once the question has been solved, and
+   stays there on the next visit. */
+.board-area { position: relative; }
+.medal {
+  position: absolute; top: 0.9rem; right: 0.9rem;
+  width: 1.7rem; height: 1.7rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(160deg, #f0c060, #b8862c);
+  color: #4a3208; font-size: 0.95rem; line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+/* display:grid above outranks the UA rule for [hidden], so say it again */
+.medal[hidden] { display: none; }
+
 .controls { display: flex; justify-content: center; min-height: 1.9rem; margin-top: 0.5rem; }
 .controls .undo {
   -webkit-appearance: none; appearance: none;
@@ -107,8 +121,12 @@ body {
 .answer { margin-top: 1.25rem; }
 .answer .played { font-size: 0.95rem; color: var(--dim); }
 .answer .played b { color: var(--ink); font-family: ui-monospace, monospace; }
+.answer .call { font-size: 1.05rem; }
+.answer .call.good { color: var(--yes); }
+.answer .call.bad { color: var(--accent); }
+.answer .call.unknown { color: var(--dim); }
 .verdict { border-left: 3px solid var(--rule); padding-left: 0.9rem; }
-.verdict.good    { border-left-color: #4c7a3f; }
+.verdict.good    { border-left-color: var(--yes); }
 .verdict.bad     { border-left-color: var(--accent); }
 .verdict.unknown { border-left-color: var(--dim); font-style: italic; }
 .verdict p:last-child { margin-bottom: 0; }
@@ -155,6 +173,8 @@ a, .toc a { color: var(--accent); }
   background: var(--rule); transition: background 0.2s, transform 0.2s;
 }
 .progress i.on { background: var(--accent); transform: scale(1.5); }
+.progress i.won { background: #c8952f; }
+.progress i.won.on { background: #f0c060; }
 
 .progress button {
   -webkit-appearance: none; appearance: none;

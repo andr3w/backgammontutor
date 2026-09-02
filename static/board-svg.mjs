@@ -16,6 +16,8 @@ const HALF  = 45;   // triangle length: also five checkers at full spacing
 const GAP   = 10;   // the well between the halves, where the dice sit
 const CK    = 9;    // checker diameter at full spacing
 
+const SLAB = 2.6, SLAB_STEP = 3.1;  // borne-off checkers lie flat in the tray
+
 const H    = HALF * 2 + GAP;                   // 100
 const W    = FRAME * 2 + PW * 12 + BAR + TRAY; // 157
 const TOP  = FRAME;
@@ -37,6 +39,23 @@ export function checkerY(p, i, n) {
   return isTop(p) ? TOP + s * (i + 0.5) : BOT - s * (i + 0.5);
 }
 
+/**
+ * Centre of one checker, wherever it is. The animation needs to know where a
+ * checker was before the position changed and where it has landed, so this has
+ * to agree exactly with what the drawing code below does.
+ */
+export function spot(place, side, i, n) {
+  if (place === 'bar') return {
+    x: BARX + BAR / 2,
+    y: side === 'x' ? MID - GAP / 2 - CK * (i + 0.5) : MID + GAP / 2 + CK * (i + 0.5),
+  };
+  if (place === 'off') return {
+    x: TRAYX + TRAY / 2,
+    y: side === 'x' ? BOT - 1 - SLAB / 2 - i * SLAB_STEP : TOP + 1 + SLAB / 2 + i * SLAB_STEP,
+  };
+  return { x: colX(pointCol(place)) + PW / 2, y: checkerY(place, i, n) };
+}
+
 const pips = {
   1: [[0, 0]],
   2: [[-1, -1], [1, 1]],
@@ -56,11 +75,12 @@ function die($m, n, cx, cy, cls) {
       $m('s:circle.pip', { cx: cx + px * u, cy: cy + py * u, r: DIE * 0.09 })));
 }
 
-function stack($m, p, side, n) {
+function stack($m, p, side, n, arriving = false) {
   const cx = colX(pointCol(p)) + PW / 2, r = CK / 2 - 0.35;
   const out = [];
   for (let i = 0; i < n; i++)
-    out.push($m(`s:circle.ck.${side}`, { cx, cy: checkerY(p, i, n), r }));
+    out.push($m(`s:circle.ck.${side}${arriving && i === n - 1 ? '.arrive' : ''}`,
+      { cx, cy: checkerY(p, i, n), r }));
   if (n > 5) out.push($m(`s:text.count`, { x: cx, y: checkerY(p, n - 1, n) + 1.4 }, String(n)));
   return out;
 }
@@ -71,9 +91,12 @@ function stack($m, p, side, n) {
  *       cur         index of the die a tap will use next
  *       highlight   [7, {p: 13, weak: true}, ...]
  *       interactive emit the transparent tap targets
+ *       arrive      the point / 'bar' / 'off' a checker has just reached; its
+ *                   outermost checker is tagged so it can be animated in
  */
 export function boardSvg($m, pos, opts = {}) {
-  const { dice = null, cur = -1, turn = 'x', highlight = [], interactive = false } = opts;
+  const { dice = null, cur = -1, turn = 'x', highlight = [],
+          interactive = false, arrive = null } = opts;
   const kids = [];
 
   kids.push($m('s:rect.frame', { x: 0, y: 0, width: W, height: H + FRAME * 2, rx: 2 }));
@@ -98,21 +121,25 @@ export function boardSvg($m, pos, opts = {}) {
   }
 
   // checkers on points
-  for (const [p, { side, n }] of Object.entries(pos.pts)) kids.push(...stack($m, +p, side, n));
+  for (const [p, { side, n }] of Object.entries(pos.pts))
+    kids.push(...stack($m, +p, side, n, arrive === +p));
 
   // checkers on the bar: each side stacks toward the quadrant it enters in
-  const bcx = BARX + BAR / 2;
-  for (let i = 0; i < (pos.bar.x || 0); i++)
-    kids.push($m('s:circle.ck.x', { cx: bcx, cy: MID - GAP / 2 - CK * (i + 0.5), r: CK / 2 - 0.35 }));
-  for (let i = 0; i < (pos.bar.o || 0); i++)
-    kids.push($m('s:circle.ck.o', { cx: bcx, cy: MID + GAP / 2 + CK * (i + 0.5), r: CK / 2 - 0.35 }));
+  for (const c of ['x', 'o'])
+    for (let i = 0; i < (pos.bar[c] || 0); i++) {
+      const { x, y } = spot('bar', c, i);
+      const last = arrive === 'bar' && i === pos.bar[c] - 1;
+      kids.push($m(`s:circle.ck.${c}${last ? '.arrive' : ''}`, { cx: x, cy: y, r: CK / 2 - 0.35 }));
+    }
 
   // borne off: flat slabs in the tray, x below, o above
-  const tw = TRAY - 4, tx = TRAYX + 2, th = 2.6;
-  for (let i = 0; i < (pos.off.o || 0); i++)
-    kids.push($m('s:rect.ck.o.borne', { x: tx, y: TOP + 1 + i * (th + 0.5), width: tw, height: th, rx: 0.6 }));
-  for (let i = 0; i < (pos.off.x || 0); i++)
-    kids.push($m('s:rect.ck.x.borne', { x: tx, y: BOT - 1 - th - i * (th + 0.5), width: tw, height: th, rx: 0.6 }));
+  for (const c of ['x', 'o'])
+    for (let i = 0; i < (pos.off[c] || 0); i++) {
+      const { x, y } = spot('off', c, i);
+      const last = arrive === 'off' && i === pos.off[c] - 1;
+      kids.push($m(`s:rect.ck.${c}.borne${last ? '.arrive' : ''}`,
+        { x: x - (TRAY - 4) / 2, y: y - SLAB / 2, width: TRAY - 4, height: SLAB, rx: 0.6 }));
+    }
 
   // dice, in the well on the side of the player on roll
   if (dice && dice.length) {
