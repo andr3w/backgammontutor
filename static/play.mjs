@@ -23,6 +23,8 @@ const solved = (() => {
 })();
 const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(solved)); } catch {} };
 
+const MS = 280;   // how long a checker takes to reach its point
+
 const CALL = {
   good: 'Well done.',
   bad: "That's not right.",
@@ -135,7 +137,7 @@ class Play {
    */
   fly(from) {
     const el = this.area.querySelector('.arrive');
-    if (!el || !from || !el.animate) return;
+    if (!el || !from) return;
     if (globalThis.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const num = a => +el.getAttribute(a);
     const cx = el.tagName === 'circle' ? num('cx') : num('x') + num('width') / 2;
@@ -144,13 +146,23 @@ class Play {
     const d = Math.hypot(dx, dy);
     if (d < 1) return;
     const lift = (from.y > GEO.MID ? -1 : 1) * Math.min(6, d * 0.18);
-    const frames = [];
-    for (let i = 0; i <= 14; i++) {
-      const t = i / 14;
-      frames.push({ transform:
-        `translate(${dx * (1 - t)}px, ${dy * (1 - t) + lift * 4 * t * (1 - t)}px)` });
-    }
-    el.animate(frames, { duration: 280, easing: 'ease-out' });
+
+    // The SVG `transform` attribute driven by rAF, not a CSS transform driven
+    // by Web Animations. Animating CSS transforms on SVG *elements* is exactly
+    // where mobile browsers part company with desktop ones; the attribute has
+    // meant the same thing everywhere since SVG 1.1. A later redraw detaches
+    // this element, and writing to a detached node is harmless, so the loop
+    // needs no cancelling.
+    const t0 = performance.now();
+    const frame = now => {
+      const raw = Math.min(1, (now - t0) / MS);
+      const t = 1 - (1 - raw) * (1 - raw);                    // ease out
+      const x = dx * (1 - t), y = dy * (1 - t) + lift * 4 * t * (1 - t);
+      el.setAttribute('transform', `translate(${x} ${y})`);
+      if (raw < 1) requestAnimationFrame(frame);
+      else el.removeAttribute('transform');
+    };
+    requestAnimationFrame(frame);
   }
 
   // --- drawing -----------------------------------------------------------

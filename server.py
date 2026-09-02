@@ -2,7 +2,7 @@
 """Backgammon Tutor — serves pre-built pages, rebuilding on demand when stale."""
 import re, subprocess
 from pathlib import Path
-from flask import Flask, Response, abort, send_from_directory
+from flask import Flask, Response, abort, request
 
 ROOT = Path(__file__).resolve().parent
 PAGES, LIB, BUILT = ROOT / "pages", ROOT / "lib", ROOT / "built"
@@ -46,7 +46,21 @@ def common():
 
 
 def serve(path):
-    return Response(path.read_bytes(), mimetype="text/html")
+    """Serve a built page, and make sure the browser asks again next time.
+
+    /static is immutable for a year, and the HTML is the only thing that names
+    the mtime-stamped asset URLs -- so a page held in a cache pins the old CSS
+    and JS along with it. Sent with no Cache-Control at all, as this was, a
+    browser is free to make up its own freshness lifetime, and phones make up
+    generous ones. `no-cache` means store it but revalidate, and the ETag makes
+    that revalidation a 304 rather than a re-download.
+    """
+    st = path.stat()
+    r = Response(path.read_bytes(), mimetype="text/html")
+    r.headers["Cache-Control"] = "no-cache"
+    r.last_modified = st.st_mtime
+    r.set_etag(f"{int(st.st_mtime)}-{st.st_size}")
+    return r.make_conditional(request)
 
 
 @app.route("/")
