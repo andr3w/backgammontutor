@@ -12,6 +12,8 @@ import * as R from './rules.mjs';
 export function meets(g, before, after, side) {
   if (g.kind === 'makes')
     return R.held(after, side).has(g.arg) && !R.held(before, side).has(g.arg);
+  if (g.kind === 'keeps')
+    return R.held(after, side).has(g.arg);
   if (g.kind === 'shots')
     return R.directShots(after, side) === g.arg;
   return null;
@@ -20,6 +22,7 @@ export function meets(g, before, after, side) {
 /** What to say about a missed goal when the page did not say it itself. */
 export function missed(g, after, side) {
   if (g.kind === 'makes') return `<p>You had the chance to make the ${g.arg} point.</p>`;
+  if (g.kind === 'keeps') return `<p>You gave up the ${g.arg} point to do it.</p>`;
   if (g.kind === 'shots') {
     const n = R.directShots(after, side);
     return n === 0

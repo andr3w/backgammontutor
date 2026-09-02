@@ -1,4 +1,4 @@
-import { page, prose, question, makes, shots, escapes } from '../lib/kit.mjs';
+import { page, prose, question, makes, shots, escapes, keeps } from '../lib/kit.mjs';
 import { board } from '../lib/board.mjs';
 
 // Every question on this page starts from the same place.
@@ -114,6 +114,132 @@ o..xx.||x...oo`,
     traps: {
     },
   }),
+
+  question({
+    id: 'hit-42',
+    board: board`
+x...o.||o....x
+x...o.||o....x
+x...o.||o.....
+x.....||o.....
+x.....||o.....
+--------------
+o.....||x.....
+o.....||x.....
+o...x.||x.....
+o...x.||x.....
+o...x.||x.o..o`,
+    dice: [4, 2],
+    ask: prose`He has left one checker on your 4-point.`,
+    goals: [
+      makes(4, prose`You made the 4-point and sent him back to the beginning.
+        Two jobs in one roll.`,
+        prose`There is a point to be made here, and a checker sitting on it.`),
+      shots(0),
+    ],
+  }),
+
+  question({
+    id: 'double-33',
+    board: board`
+x...o.||o.o..x
+x...o.||o.o..x
+x.....||o.....
+x.....||o.....
+x.....||o.....
+--------------
+......||......
+o.....||x.....
+o.....||x.....
+o...x.||x.x..o
+o...x.||x.x..o`,
+    dice: [3, 3],
+    ask: prose`Doubles give you four moves.`,
+    goals: [
+      makes(5, prose`The 5-point.`,
+        prose`Four threes and you did not make the 5-point.`),
+      makes(3, prose`And the 3-point as well — two points from one roll.`,
+        prose`You had enough threes to make a second point.`),
+    ],
+  }),
+
+  question({
+    id: 'double-55',
+    board: board`
+x...o.||o.o..x
+x...o.||o.o..x
+x.....||o.....
+x.....||o.....
+x.....||......
+--------------
+o.....||x.....
+o.....||x.....
+o...x.||x.....
+o...x.||x....o
+o...x.||x....o`,
+    dice: [5, 5],
+    ask: prose`Nothing lands on the 8-point that you want to keep there.`,
+    goals: [
+      makes(3, prose`Two checkers travel the whole way from the 13-point to the
+        3-point. A long way to go to build, and still worth it.`,
+        prose`Four fives will build a point if you send the same two checkers
+        twice.`),
+      keeps(8, prose`And the 8-point is still yours.`,
+        prose`You built the 3-point by taking the 8-point apart. Keep what you
+        already own.`),
+    ],
+  }),
+
+  question({
+    id: 'double-44',
+    board: board`
+x...oo||o....x
+x...oo||o....x
+x.....||o.....
+x.....||o.....
+x.....||o.....
+--------------
+......||x.....
+o.....||x.....
+o...x.||x.....
+o...x.||x....o
+o...x.||x....o`,
+    dice: [4, 4],
+    ask: prose`Your two back checkers have four fours between them.`,
+    goals: [
+      makes(20, prose`A point of your own inside his home board. Your back
+        checkers are safe there, and they can wait as long as they like.`,
+        prose`Your back checkers can reach a point of their own.`),
+      makes(9, prose`The 9-point too, and every checker is safe.`,
+        prose`You had two fours left over for a second point.`),
+    ],
+  }),
+
+  question({
+    id: 'sixfive-5pt',
+    board: board`
+x...oo||o....x
+x...oo||o....x
+x.....||o.....
+......||o.....
+......||o.....
+--------------
+......||x.....
+o.....||x.....
+o...x.||x.....
+o...x.||x....o
+oxx.x.||x....o`,
+    dice: [6, 5],
+    ask: prose`Two checkers are already on their way.`,
+    goals: [
+      makes(5, prose`The 11-point and the 10-point come together on the
+        5-point. That is what those two checkers were for.`,
+        prose`Look at the 11-point and the 10-point. A six and a five bring
+        them to the same place.`),
+      shots(0),
+    ],
+  }),
+
 /*
   question({
     id: 'open-65',
