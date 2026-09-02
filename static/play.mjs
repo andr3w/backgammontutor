@@ -249,7 +249,7 @@ class Play {
     // play. General before specific, and never one without the other.
     const trap = (this.q.traps || {})[move];
     const html = [
-      failed.otherwise || this.q.otherwise || missed(failed, this.pos, this.side),
+      failed.otherwise || this.q.otherwise || missed(failed, this.q.pos, this.pos, this.side),
       trap,
     ].filter(Boolean).join('');
     return { tone: 'bad', html };

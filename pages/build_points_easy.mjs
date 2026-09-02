@@ -1,4 +1,4 @@
-import { page, prose, question, makes, shots, escapes, keeps } from '../lib/kit.mjs';
+import { page, prose, question, made, clear, shots, hits, escapes } from '../lib/kit.mjs';
 import { board } from '../lib/board.mjs';
 
 // Every question on this page starts from the same place.
@@ -26,7 +26,7 @@ export default page('Build points (easy)', [
     dice: [3, 1],
     ask: prose`How do you play 3-1?`,
     goals: [
-      makes(5, prose`You've made the 5-point.
+      made(5, prose`You've made the 5-point.
                      This is the best point on the board - so good it's called the "golden point".`,
                prose`Don't throw away a chance to make the 5-point.`),
     ],
@@ -47,7 +47,7 @@ export default page('Build points (easy)', [
     dice: [4, 2],
     ask: prose`And 4-2?`,
     goals: [
-      makes(4, prose`You've made home board point.`, `You have a chance to make a point in your home board.`),
+      made(4, prose`You've made home board point.`, `You have a chance to make a point in your home board.`),
       shots(0),
     ],
     traps: {
@@ -64,7 +64,7 @@ export default page('Build points (easy)', [
     dice: [6, 1],
     ask: prose`And 6-1?`,
     goals: [
-      makes(7, prose`You made the bar point. You are starting to trap your opponent's back pieces.`,
+      made(7, prose`You made the bar point. You are starting to trap your opponent's back pieces.`,
                prose`You have a chance to build on the bar point (the 7-point). You should do that.`),
       shots(0),
     ],
@@ -82,7 +82,7 @@ export default page('Build points (easy)', [
     dice: [5, 3],
     ask: prose`How about 5-3?`,
     goals: [
-      makes(3, prose`You built on the three point, even though it's not the
+      made(3, prose`You built on the three point, even though it's not the
                best place to build this is still the best move for this opening throw.`,
                prose`You have a chance to build inside your home board - you must do that.`),
       shots(0),
@@ -108,7 +108,7 @@ o..xx.||x...oo`,
     dice: [3, 4],
     ask: prose`This second roll is great`,
     goals: [
-      makes(5,'You built on the 5 point, that is the best point on the whole board',
+      made(5,'You built on the 5 point, that is the best point on the whole board',
               `You didn't make the 5 point when you could have.`),
     ],
     traps: {
@@ -132,7 +132,7 @@ o...x.||x.o..o`,
     dice: [4, 2],
     ask: prose`He has left one checker on your 4-point.`,
     goals: [
-      makes(4, prose`You made the 4-point and sent him back to the beginning.
+      made(4, prose`You made the 4-point and sent him back to the beginning.
         Two jobs in one roll.`,
         prose`There is a point to be made here, and a checker sitting on it.`),
       shots(0),
@@ -156,9 +156,9 @@ o...x.||x.x..o`,
     dice: [3, 3],
     ask: prose`Doubles give you four moves.`,
     goals: [
-      makes(5, prose`The 5-point.`,
+      made(5, prose`The 5-point.`,
         prose`Four threes and you did not make the 5-point.`),
-      makes(3, prose`And the 3-point as well — two points from one roll.`,
+      made(3, prose`And the 3-point as well — two points from one roll.`,
         prose`You had enough threes to make a second point.`),
     ],
   }),
@@ -180,11 +180,11 @@ o...x.||x....o`,
     dice: [5, 5],
     ask: prose`Nothing lands on the 8-point that you want to keep there.`,
     goals: [
-      makes(3, prose`Two checkers travel the whole way from the 13-point to the
+      made(3, prose`Two checkers travel the whole way from the 13-point to the
         3-point. A long way to go to build, and still worth it.`,
         prose`Four fives will build a point if you send the same two checkers
         twice.`),
-      keeps(8, prose`And the 8-point is still yours.`,
+      made(8, prose`And the 8-point is still yours.`,
         prose`You built the 3-point by taking the 8-point apart. Keep what you
         already own.`),
     ],
@@ -207,10 +207,10 @@ o...x.||x....o`,
     dice: [4, 4],
     ask: prose`Your two back checkers have four fours between them.`,
     goals: [
-      makes(20, prose`A point of your own inside his home board. Your back
+      made(20, prose`A point of your own inside his home board. Your back
         checkers are safe there, and they can wait as long as they like.`,
         prose`Your back checkers can reach a point of their own.`),
-      makes(9, prose`The 9-point too, and every checker is safe.`,
+      made(9, prose`The 9-point too, and every checker is safe.`,
         prose`You had two fours left over for a second point.`),
     ],
   }),
@@ -232,7 +232,7 @@ oxx.x.||x....o`,
     dice: [6, 5],
     ask: prose`Two checkers are already on their way.`,
     goals: [
-      makes(5, prose`The 11-point and the 10-point come together on the
+      made(5, prose`The 11-point and the 10-point come together on the
         5-point. That is what those two checkers were for.`,
         prose`Look at the 11-point and the 10-point. A six and a five bring
         them to the same place.`),

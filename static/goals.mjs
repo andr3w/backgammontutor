@@ -10,10 +10,22 @@ import * as R from './rules.mjs';
  * kind must not read as a failure.
  */
 export function meets(g, before, after, side) {
-  if (g.kind === 'makes')
-    return R.held(after, side).has(g.arg) && !R.held(before, side).has(g.arg);
-  if (g.kind === 'keeps')
-    return R.held(after, side).has(g.arg);
+  // --- state: what the board looks like when the play is over ---------
+  //
+  // A point is in one of three conditions, not two: made (two or more of
+  // yours), clear (none of yours), or neither -- a lone checker, which is the
+  // condition a student most needs telling about, so no predicate quietly
+  // lumps it in with one of the others.
+  if (g.kind === 'made')  return R.held(after, side).has(g.arg);
+  if (g.kind === 'clear') return !after.pts[g.arg] || after.pts[g.arg].side !== side;
+  if (g.kind === 'shots') return R.directShots(after, side) === g.arg;
+
+  // --- event: what the play did on the way ----------------------------
+  //
+  // These cannot be written as states. The position after 8/4* is the same
+  // position you would reach by occupying the 4 point with his checker already
+  // on the bar, so "did you hit" is not a question the end position can
+  // answer. Nor is "did a checker leave the 24 point".
   if (g.kind === 'hits') {
     const was = before.pts[g.arg];
     if (!was || was.side === side || was.n !== 1) return false;   // nothing to hit
@@ -25,15 +37,24 @@ export function meets(g, before, after, side) {
     if (!was || was.side !== side) return false;
     return (now && now.side === side ? now.n : 0) < was.n;
   }
-  if (g.kind === 'shots')
-    return R.directShots(after, side) === g.arg;
-  return null;
+  return null;   // no predicate: never read as a failure
 }
 
 /** What to say about a missed goal when the page did not say it itself. */
-export function missed(g, after, side) {
-  if (g.kind === 'makes') return `<p>You had the chance to make the ${g.arg} point.</p>`;
-  if (g.kind === 'keeps') return `<p>You gave up the ${g.arg} point to do it.</p>`;
+export function missed(g, before, after, side) {
+  if (g.kind === 'made') {
+    // the predicate is a state, but the explanation can look at where the
+    // student started -- losing a point and never making one read differently
+    return R.held(before, side).has(g.arg)
+      ? `<p>You gave up the ${g.arg} point.</p>`
+      : `<p>You had the chance to make the ${g.arg} point.</p>`;
+  }
+  if (g.kind === 'clear') {
+    const left = after.pts[g.arg];
+    return left && left.side === side && left.n === 1
+      ? `<p>You left a checker behind on the ${g.arg} point.</p>`
+      : `<p>The ${g.arg} point has to go.</p>`;
+  }
   if (g.kind === 'hits') return `<p>There is a checker of his on the ${g.arg} point, and you left it there.</p>`;
   if (g.kind === 'escapes') return `<p>A checker on the ${g.arg} point wanted to leave.</p>`;
   if (g.kind === 'shots') {

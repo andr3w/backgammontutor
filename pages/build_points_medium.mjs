@@ -1,4 +1,4 @@
-import { page, prose, question, makes, shots, hits, keeps, escapes } from '../lib/kit.mjs';
+import { page, prose, question, made, clear, shots, hits, escapes } from '../lib/kit.mjs';
 import { board } from '../lib/board.mjs';
 
 export default page('Build points (medium)', [
@@ -24,7 +24,7 @@ o...x.||xo...o`,
     dice: [3, 1],
     ask: prose`He has crept out to your 5-point.`,
     goals: [
-      makes(5, prose`The golden point, made right on top of him.`,
+      made(5, prose`The golden point, made right on top of him.`,
         prose`The 5-point is there for the taking, as it always is.`),
       hits(5, prose`He goes back to the far corner and starts again.`,
         prose`Do not let him sit there.`),
@@ -50,7 +50,7 @@ o...x.||x....o`,
     goals: [
       hits(20, prose`Your back checkers walk onto him and he is on the bar.`,
         prose`There is a checker of his alone on the 20-point, and you can reach it.`),
-      makes(4, prose`Two more twos make the 4-point while he is not looking.`,
+      made(4, prose`Two more twos make the 4-point while he is not looking.`,
         prose`You had four twos. Hitting used only two of them.`),
     ],
   }),
@@ -98,7 +98,7 @@ o..xxo||x....o`,
       hits(7, prose`Straight down from the 13-point. He goes back, and the bar
         point is yours to cover next roll.`,
         prose`There is a lone checker of his on your bar point.`),
-      keeps(8, prose`And the 8-point is untouched.`,
+      made(8, prose`And the 8-point is untouched.`,
         prose`You hit, but you pulled the 8-point apart to do it.`),
     ],
   }),
@@ -194,7 +194,7 @@ o...x.||x....o`,
     dice: [4, 3],
     ask: prose`Your two back checkers are apart.`,
     goals: [
-      makes(20, prose`Together on the 20-point. Safe there, and squarely in the
+      made(20, prose`Together on the 20-point. Safe there, and squarely in the
         way of everything he wants to bring home.`,
         prose`Your two back checkers can meet on the same point.`),
     ],
@@ -242,7 +242,7 @@ o...x.||x.x..o`,
     dice: [5, 4],
     ask: prose`Nothing of his is within reach.`,
     goals: [
-      makes(4, prose`One checker comes all the way down and covers the blot on
+      made(4, prose`One checker comes all the way down and covers the blot on
         your 4-point.`,
         prose`You have a checker standing alone on your 4-point.`),
       shots(0, prose`Nothing of yours can be touched.`,

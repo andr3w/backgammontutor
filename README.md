@@ -145,7 +145,39 @@ Every position's XGID is checked by round-tripping it through gnubg and assertin
 the resulting Position ID, because XGID has no checksum: a typo produces a
 different legal position rather than an error.
 
-### Checking a page
+### Goals
+
+A question is graded by goals: structural facts about the play, each carrying
+what to say when the student meets it and what to say when they do not. They
+come in two kinds, and the spelling says which.
+
+| | | |
+|---|---|---|
+| **state** | `made(p)` | two or more of yours on the point at the end |
+| | `clear(p)` | none of yours on it |
+| | `shots(n)` | how many of your blots he can reach with one die |
+| **event** | `hits(p)` | his blot there goes to the bar |
+| | `escapes(p)` | a checker of yours leaves that point, deep in his territory |
+
+A state goal is a property of the position the play produces. It does not care
+how the checkers got there, which is right — the student is graded on the board
+they leave behind. So `made(8)` holds whether they made the point this roll or
+held it all along, and an author never has to think about which.
+
+An event goal cannot be written as a state. The position after `8/4*` is the
+position you would also reach by occupying the 4 point with his checker already
+on the bar, so "did you hit" is not a question the end position can answer.
+Neither is "did a checker leave the 24 point".
+
+`made` and `clear` are not opposites: a point with one checker on it is neither,
+and that is the condition a student most needs telling about.
+
+Goals are listed in order of importance. Meet them all and every `why` prints;
+fail and only the first failure speaks. A goal with no text of its own gets a
+generated sentence from the position, so `shots(0)` alone still says something
+true about the play.
+
+## Checking a page
 
 Two different questions, two different tools.
 
