@@ -1,4 +1,4 @@
-import { page, prose, question, made, clear, shots, hits, escapes } from '../lib/kit.mjs';
+import { page, prose, question, made, blot, clear, shots, hits, escapes } from '../lib/kit.mjs';
 import { board } from '../lib/board.mjs';
 
 // Every question on this page starts from the same place.
@@ -30,15 +30,13 @@ export default page('Build points (easy)', [
                      This is the best point on the board - so good it's called the [[golden point]].`,
                prose`Don't throw away a chance to make the 5-point.`),
     ],
-    traps: {
-      '24/23 13/10': prose`A reasonable shape with almost any other roll. Here it
-        turns down the best point on the board.`,
-      '24/20': prose`The four point [[anchor]] is worth having, but not at this
-        price — and one checker there is not an anchor.`,
-      '13/9': prose`Aims at the five point. You were offered it.`,
-    },
-    otherwise: prose`The roll makes the best point on the board, for free.
-      Nothing beats that.`,
+    antigoals: [
+      blot(20, prose`The four point [[anchor]] is worth having, but not at this
+        price — and one checker there is not an anchor.`),
+      blot(9, prose`Aims at the five point. You were offered it.`),
+      blot(10, prose`A reasonable shape with almost any other roll. Here it
+        turns down the best point on the board.`),
+    ],
   }),
 
   question({
@@ -50,12 +48,12 @@ export default page('Build points (easy)', [
       made(4, prose`You've made a [[home board]] point.`, `You have a chance to make a point in your [[home board]].`),
       shots(0),
     ],
-    traps: {
-      '13/11 13/9': prose`Aims at the four point. It is yours right now if you
-        take it.`,
-      '24/20 13/11': prose`Starts the four point [[anchor]]. Making the four point
-        outright is better than starting to.`,
-    },
+    antigoals: [
+      blot(20, prose`Starts the four point [[anchor]]. Making the four point
+        outright is better than starting to.`),
+      blot(9, prose`Aims at the four point. It is yours right now if you take
+        it.`),
+    ],
   }),
 
   question({
@@ -68,12 +66,12 @@ export default page('Build points (easy)', [
                prose`You have a chance to build on the [[bar point]] (the 7-point). You should do that.`),
       shots(0),
     ],
-    traps: {
-      '24/23 13/7': prose`The right first half, then you stopped. The bar point
-        wants both checkers.`,
-      '24/23 24/18': prose`Two blots in front of his home board, and the bar
-        point goes begging.`,
-    },
+    antigoals: [
+      blot(7, prose`The right first half, then you stopped. The [[bar point]]
+        wants both checkers.`),
+      blot(18, prose`A checker alone in front of his [[home board]], and the
+        [[bar point]] going begging.`),
+    ],
   }),
 
   question({
@@ -87,8 +85,6 @@ export default page('Build points (easy)', [
                prose`You have a chance to build inside your [[home board]] - you must do that.`),
       shots(0),
     ],
-    traps: {
-    },
   }),
 
   question({
@@ -111,8 +107,6 @@ o..xx.||x...oo`,
       made(5,'You built on the 5 point, that is the best point on the whole board',
               `You didn't make the 5 point when you could have.`),
     ],
-    traps: {
-    },
   }),
 
   question({

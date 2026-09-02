@@ -12,12 +12,14 @@ import * as R from './rules.mjs';
 export function meets(g, before, after, side) {
   // --- state: what the board looks like when the play is over ---------
   //
-  // A point is in one of three conditions, not two: made (two or more of
-  // yours), clear (none of yours), or neither -- a lone checker, which is the
-  // condition a student most needs telling about, so no predicate quietly
-  // lumps it in with one of the others.
-  if (g.kind === 'made')  return R.held(after, side).has(g.arg);
-  if (g.kind === 'clear') return !after.pts[g.arg] || after.pts[g.arg].side !== side;
+  // A point is in one of three conditions and each has its own predicate:
+  // made (two or more of yours), blot (exactly one), clear (none). Nothing
+  // quietly lumps the lone checker in with one of the others, because that is
+  // the condition a student most needs telling about.
+  const mine = pos => (pos.pts[g.arg] && pos.pts[g.arg].side === side ? pos.pts[g.arg].n : 0);
+  if (g.kind === 'made')  return mine(after) >= 2;
+  if (g.kind === 'blot')  return mine(after) === 1;
+  if (g.kind === 'clear') return mine(after) === 0;
   if (g.kind === 'shots') return R.directShots(after, side) === g.arg;
 
   // --- event: what the play did on the way ----------------------------
@@ -55,6 +57,7 @@ export function missed(g, before, after, side) {
       ? `<p>You left a checker behind on the ${g.arg} point.</p>`
       : `<p>The ${g.arg} point has to go.</p>`;
   }
+  if (g.kind === 'blot') return `<p>The ${g.arg} point wants exactly one checker on it.</p>`;
   if (g.kind === 'hits') return `<p>There is a checker of his on the ${g.arg} point, and you left it there.</p>`;
   if (g.kind === 'escapes') return `<p>A checker on the ${g.arg} point wanted to leave.</p>`;
   if (g.kind === 'shots') {

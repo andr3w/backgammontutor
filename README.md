@@ -155,6 +155,7 @@ come in two kinds, and the spelling says which.
 | | | |
 |---|---|---|
 | **state** | `made(p)` | two or more of yours on the point at the end |
+| | `blot(p)` | exactly one |
 | | `clear(p)` | none of yours on it |
 | | `shots(n)` | how many of your blots he can reach with one die |
 | **event** | `hits(p)` | his blot there goes to the bar |
@@ -170,8 +171,9 @@ position you would also reach by occupying the 4 point with his checker already
 on the bar, so "did you hit" is not a question the end position can answer.
 Neither is "did a checker leave the 24 point".
 
-`made` and `clear` are not opposites: a point with one checker on it is neither,
-and that is the condition a student most needs telling about.
+A point is in one of three conditions and each has its own predicate, so
+nothing quietly lumps the lone checker in with one of the others — it is the
+condition a student most needs telling about.
 
 An **antigoal** names what the student was tempted to do instead. It uses the
 same constructors, but `why` is what to say when they did it and `otherwise` is
