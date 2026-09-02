@@ -122,35 +122,30 @@ export function boardSvg($m, pos, opts = {}) {
     const x0 = cx - (ds.length - 1) * DIE_GAP / 2;
     const g = ds.map((d, i) => die($m, d.v, x0 + i * DIE_GAP, MID,
       `die${d.spent ? '.spent' : ''}${i === cur ? '.now' : ''}`));
-    // one target over the whole roll: tapping anywhere on it passes the turn
-    // to the other die, which is the only thing the dice do
-    if (interactive) g.push($m('s:rect.hit', { 'data-dice': '1',
-      x: x0 - DIE_GAP / 2 - 1, y: MID - DIE, width: ds.length * DIE_GAP + 2, height: DIE * 2 }));
+    // One target over the whole roll -- switching die is the only thing the
+    // dice do, and only when there are two different ones left to switch
+    // between. Doubles get no target: there is nothing to switch to.
+    const open = ds.filter(d => !d.spent);
+    if (interactive && new Set(open.map(d => d.v)).size > 1)
+      g.push($m('s:rect.hit', { 'data-dice': '1',
+        x: x0 - DIE_GAP / 2 - 1, y: MID - DIE, width: ds.length * DIE_GAP + 2, height: DIE * 2 }));
     kids.push($m('s:g.dice-group', ...g));
   }
 
-  // highlights sit above the checkers, hit targets above everything
+  // Highlights sit above the checkers; the tap targets go above everything.
+  // A point gets a target exactly when it is highlighted, so the pointer
+  // cursor never appears anywhere a tap would do nothing.
+  const box = p => p === 'bar'
+    ? { x: BARX, y: TOP, width: BAR, height: H }
+    : { x: colX(pointCol(p)), y: isTop(p) ? TOP : BOT - HALF, width: PW, height: HALF };
+  const targets = [];
   for (const h of highlight) {
     const p = typeof h === 'number' ? h : h.p;
     const weak = typeof h === 'number' ? false : !!h.weak;
-    if (p === 'bar') {
-      kids.push($m(`s:rect.lit${weak ? '.weak' : ''}`,
-        { x: BARX, y: TOP, width: BAR, height: H, rx: 1 }));
-      continue;
-    }
-    const x = colX(pointCol(p));
-    kids.push($m(`s:rect.lit${weak ? '.weak' : ''}`, isTop(p)
-      ? { x, y: TOP, width: PW, height: HALF, rx: 1 }
-      : { x, y: BOT - HALF, width: PW, height: HALF, rx: 1 }));
+    kids.push($m(`s:rect.lit${weak ? '.weak' : ''}`, { ...box(p), rx: 1 }));
+    if (interactive) targets.push($m('s:rect.hit', { 'data-p': p, ...box(p) }));
   }
-  if (interactive) {
-    for (let p = 1; p <= 24; p++) {
-      const x = colX(pointCol(p));
-      kids.push($m('s:rect.hit', { 'data-p': p, x, y: isTop(p) ? TOP : BOT - HALF, width: PW, height: HALF }));
-    }
-    kids.push($m('s:rect.hit', { 'data-p': 'bar', x: BARX, y: TOP, width: BAR, height: H }));
-    kids.push($m('s:rect.hit', { 'data-p': 'off', x: TRAYX, y: TOP, width: TRAY, height: H }));
-  }
+  kids.push(...targets);
 
   return $m('s:svg.bg-board', {
     xmlns: 'http://www.w3.org/2000/svg',

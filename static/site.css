@@ -5,7 +5,7 @@
   --frame: #6b4a2c; --felt: #e7dcc6;
   --pt-a: #b8834e; --pt-b: #8c5a30; --pt-num: #f0e6d2;
   --ck-x: #f4efe4; --ck-o: #2e2a26; --ck-count: #f4efe4;
-  --die: #f7f4ee; --die-pip: #26221e;
+  --die: #f7f4ee; --die-pip: #26221e; --lit: #fffaea;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -14,7 +14,7 @@
     --frame: #3a2a1c; --felt: #2b3a30;
     --pt-a: #7a5636; --pt-b: #4e3a26; --pt-num: #c8bba4;
     --ck-x: #e6ddcc; --ck-o: #1a1714;
-    --die: #ece7dd; --die-pip: #26221e;
+    --die: #ece7dd; --die-pip: #26221e; --lit: #ffe9b4;
   }
 }
 * { box-sizing: border-box; }
@@ -76,11 +76,18 @@ body {
 .bg-board .die-face { fill: var(--die); stroke: rgba(0, 0, 0, 0.4); stroke-width: 0.3; }
 .bg-board .pip      { fill: var(--die-pip); }
 
-/* Two strengths: solid means the marked die will go from here, dashed means
-   only the other one will. Tapping the dice swaps which is which, and that is
-   how the dice reveal themselves as a control. */
-.bg-board .lit { fill: none; stroke: var(--accent); stroke-width: 1; rx: 1; }
-.bg-board .lit.weak { stroke: var(--pt-num); stroke-width: 0.7; stroke-dasharray: 2 2; }
+/* A wash rather than an outline. Two strengths: the brighter one means the
+   marked die will go from here, the fainter that only the other one will.
+   Tapping the dice swaps which is which, and that is how the dice reveal
+   themselves as a control. */
+.bg-board .lit {
+  fill: var(--lit); fill-opacity: 0.15;
+  stroke: var(--lit); stroke-opacity: 0.45; stroke-width: 0.35;
+}
+.bg-board .lit.weak { fill-opacity: 0.05; stroke-opacity: 0.16; }
+
+/* Targets exist only on playable points, so this is the whole of the cursor
+   rule: if it is a pointer, something happens. */
 .bg-board .hit { fill: transparent; cursor: pointer; }
 
 .bg-board .die.spent { opacity: 0.25; }
