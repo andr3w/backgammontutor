@@ -109,6 +109,16 @@ body {
 /* display:grid above outranks the UA rule for [hidden], so say it again */
 .medal[hidden] { display: none; }
 
+/* The question's number, opposite the medal. It is how a question is referred
+   to, so it is always there. */
+.qnum {
+  position: absolute; top: 0.9rem; left: 0.9rem;
+  width: 1.7rem; height: 1.7rem;
+  display: grid; place-items: center;
+  color: var(--dim); font: 0.9rem/1 system-ui, sans-serif;
+  border: 1px solid var(--rule); border-radius: 50%;
+}
+
 .controls { display: flex; justify-content: center; min-height: 1.9rem; margin-top: 0.5rem; }
 .controls .undo {
   -webkit-appearance: none; appearance: none;
@@ -176,7 +186,7 @@ h1 { font-size: 1.8rem; line-height: 1.15; margin: 0 0 1.25rem; letter-spacing: 
   width: 2.1rem; height: 2.1rem; border-radius: 50%;
   display: grid; place-items: center;
   border: 1px solid var(--rule); background: transparent;
-  color: var(--rule); font-size: 1rem; line-height: 1;
+  color: var(--dim); font: 0.9rem/1 system-ui, sans-serif;
   transition: background 0.25s, color 0.25s, border-color 0.25s;
 }
 .medal-slot.won .pip {
