@@ -98,10 +98,18 @@
   const prev = button('Previous', '\u2191', -1);
   const next = button('Next', '\u2193', 1);
 
+  // One pip per screen. A question's pip fills in when it has been solved, so
+  // the column is both "where am I" and "how far have I got" -- the same
+  // medals the ending counts, in view on every screen.
   const dots = document.createElement('div');
   dots.className = 'dots';
   dots.setAttribute('aria-hidden', 'true');
-  screens.forEach(() => dots.appendChild(document.createElement('i')));
+  screens.forEach(s => {
+    const i = document.createElement('i');
+    i.className = s.classList.contains('screen-question') ? 'q'
+      : s.classList.contains('screen-end') ? 'end' : 'text';
+    dots.appendChild(i);
+  });
 
   bar.append(prev, dots, next);
   document.body.appendChild(bar);

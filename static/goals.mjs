@@ -14,6 +14,17 @@ export function meets(g, before, after, side) {
     return R.held(after, side).has(g.arg) && !R.held(before, side).has(g.arg);
   if (g.kind === 'keeps')
     return R.held(after, side).has(g.arg);
+  if (g.kind === 'hits') {
+    const was = before.pts[g.arg];
+    if (!was || was.side === side || was.n !== 1) return false;   // nothing to hit
+    const now = after.pts[g.arg];
+    return !!now && now.side === side;
+  }
+  if (g.kind === 'escapes') {
+    const was = before.pts[g.arg], now = after.pts[g.arg];
+    if (!was || was.side !== side) return false;
+    return (now && now.side === side ? now.n : 0) < was.n;
+  }
   if (g.kind === 'shots')
     return R.directShots(after, side) === g.arg;
   return null;
@@ -23,6 +34,8 @@ export function meets(g, before, after, side) {
 export function missed(g, after, side) {
   if (g.kind === 'makes') return `<p>You had the chance to make the ${g.arg} point.</p>`;
   if (g.kind === 'keeps') return `<p>You gave up the ${g.arg} point to do it.</p>`;
+  if (g.kind === 'hits') return `<p>There is a checker of his on the ${g.arg} point, and you left it there.</p>`;
+  if (g.kind === 'escapes') return `<p>A checker on the ${g.arg} point wanted to leave.</p>`;
   if (g.kind === 'shots') {
     const n = R.directShots(after, side);
     return n === 0

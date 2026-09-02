@@ -15,7 +15,7 @@ o...x.||x.....
 o...x.||x....o
 o...x.||x....o`;
 
-export default page('Build if you can', [
+export default page('Build points (easy)', [
 
   prose`**If the roll makes a point, make it.** A point is permanent. The point
     you make now is still working for you twenty rolls from now.`,
@@ -260,4 +260,4 @@ oxx.x.||x....o`,
   }),
 */
   prose`The other ten rolls are on the next page.`,
-]);
+], { next: 'build_points_medium' });

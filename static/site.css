@@ -6,6 +6,7 @@
   --pt-a: #b8834e; --pt-b: #8c5a30; --pt-num: #f0e6d2;
   --ck-x: #f4efe4; --ck-o: #2e2a26; --ck-count: #f4efe4;
   --die: #f7f4ee; --die-pip: #26221e; --lit: #fffaea; --yes: #4c7a3f;
+  --gold: #f0c060; --gold-edge: #b8862c;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -15,6 +16,7 @@
     --pt-a: #7a5636; --pt-b: #4e3a26; --pt-num: #c8bba4;
     --ck-x: #e6ddcc; --ck-o: #1a1714;
     --die: #ece7dd; --die-pip: #26221e; --lit: #ffe9b4; --yes: #8ab97a;
+    --gold: #e0b355; --gold-edge: #8c6520;
   }
 }
 * { box-sizing: border-box; }
@@ -100,7 +102,7 @@ body {
   position: absolute; top: 0.9rem; right: 0.9rem;
   width: 1.7rem; height: 1.7rem; border-radius: 50%;
   display: grid; place-items: center;
-  background: linear-gradient(160deg, #f0c060, #b8862c);
+  background: linear-gradient(160deg, var(--gold), var(--gold-edge));
   color: #4a3208; font-size: 0.95rem; line-height: 1;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
@@ -159,19 +161,31 @@ h1 { font-size: 1.8rem; line-height: 1.15; margin: 0 0 1.25rem; letter-spacing: 
 .lead p { color: var(--dim); }
 .lead p strong { color: var(--accent); }
 
-/* ---- the ending ---- */
-.screen-end .score { font-size: 1.15rem; margin-bottom: 0.75rem; }
+/* ---- the ending: every question's medal, won or not ---- */
+.screen-end .score { font-size: 1.15rem; margin-bottom: 1rem; }
 .screen-end.won .score { color: var(--yes); }
-.unsolved {
-  list-style: none; padding: 0; margin: 0 0 1.5rem;
-  display: flex; flex-wrap: wrap; gap: 0.5rem;
+.medals {
+  list-style: none; padding: 0; margin: 0 0 1.75rem;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem 0.5rem;
 }
-.unsolved a {
-  display: block; padding: 0.35rem 0.7rem;
-  border: 1px solid var(--rule); border-radius: 999px;
-  font: 0.85rem/1 ui-monospace, monospace; text-decoration: none;
+.medals a {
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  text-decoration: none; color: var(--dim);
 }
-.unsolved[hidden] { display: none; }
+.medals .pip {
+  width: 2.1rem; height: 2.1rem; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 1px solid var(--rule); background: transparent;
+  color: var(--rule); font-size: 1rem; line-height: 1;
+  transition: background 0.25s, color 0.25s, border-color 0.25s;
+}
+.medal-slot.won .pip {
+  background: linear-gradient(160deg, var(--gold), var(--gold-edge));
+  border-color: var(--gold-edge); color: #4a3208;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.medal-slot.won a { color: var(--ink); }
+.medals .roll { font: 0.72rem/1 ui-monospace, monospace; }
 .onward-wrap { margin-top: 1.75rem; }
 .onward {
   display: inline-block; padding: 0.6rem 1.2rem;
@@ -194,14 +208,15 @@ a, .toc a { color: var(--accent); }
   bottom: calc(0.75rem + env(safe-area-inset-bottom));
   display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
 }
-.progress .dots { display: flex; flex-direction: column; gap: 0.45rem; padding: 0.15rem 0; }
+.progress .dots { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.15rem 0; }
 .progress i {
-  display: block; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--rule); transition: background 0.2s, transform 0.2s;
+  display: block; width: 8px; height: 8px; border-radius: 50%;
+  border: 1px solid var(--rule); background: transparent;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
-.progress i.on { background: var(--accent); transform: scale(1.5); }
-.progress i.won { background: #c8952f; }
-.progress i.won.on { background: #f0c060; }
+.progress i.won { background: var(--gold); border-color: var(--gold-edge); }
+.progress i.end { border-radius: 1px; }
+.progress i.on { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--accent); }
 
 .progress button {
   -webkit-appearance: none; appearance: none;
