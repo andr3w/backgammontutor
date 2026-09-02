@@ -236,4 +236,4 @@ o.x.x.||xxxxo.`,
   }),
 
   prose`When you cannot be safe, be hit by one number.`,
-]);
+], { next: 'bearing_off' });

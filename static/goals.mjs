@@ -25,6 +25,7 @@ export function meets(g, before, after, side) {
   // asked has not failed.
   if (g.kind === 'prime') return R.primeLength(after, side) >= g.arg;
   if (g.kind === 'board') return R.boardPoints(after, side) >= g.arg;
+  if (g.kind === 'off')   return R.borneOff(after, side) >= g.arg;
   if (g.kind === 'shots') return R.directShots(after, side) === g.arg;
   // numbers: how many different die numbers hit you. Exact, like shots -- the
   // whole point of duplication is the difference between one and two.
@@ -75,6 +76,10 @@ export function missed(g, before, after, side) {
     const n = R.boardPoints(after, side);
     return `<p>That leaves ${n} point${n === 1 ? '' : 's'} made in your home board.
       You can have ${g.arg}.</p>`;
+  }
+  if (g.kind === 'off') {
+    const n = R.borneOff(after, side);
+    return `<p>You have ${n} checker${n === 1 ? '' : 's'} off. The roll would take ${g.arg}.</p>`;
   }
   if (g.kind === 'hits') return `<p>There is a checker of his on the ${g.arg} point, and you left it there.</p>`;
   if (g.kind === 'escapes') return `<p>A checker on the ${g.arg} point wanted to leave.</p>`;

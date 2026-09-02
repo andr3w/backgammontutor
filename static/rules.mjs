@@ -142,6 +142,9 @@ export function directShots(pos, side) {
   return n;
 }
 
+/** How many checkers `side` has borne off. */
+export const borneOff = (pos, side) => pos.off[side] || 0;
+
 /** The longest run of consecutive points `side` holds. */
 export function primeLength(pos, side) {
   const h = held(pos, side);

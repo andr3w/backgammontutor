@@ -161,6 +161,7 @@ come in two kinds, and the spelling says which.
 | | `numbers(n)` | how many different die numbers hit something of yours |
 | | `prime(n)` | consecutive points held, at least this many |
 | | `board(n)` | points made in your own home board, at least this many |
+| | `off(n)` | checkers borne off, at least this many |
 | **event** | `hits(p)` | his blot there goes to the bar |
 | | `escapes(p)` | a checker of yours leaves that point, deep in his territory |
 
@@ -234,6 +235,12 @@ It cannot tell you whether that answer is any good. Only an engine can:
 ```sh
 node verify.mjs build_points_medium --gnubg     # GNUBG_SSH=host, default laalaa
 ```
+
+It drives gnubg as one batch, which is sound for money play and only for
+money play: gnubg carries match state from one `set xgid` to the next, so a
+scored position is evaluated in the previous position's context — silently,
+and by margins large enough to look like findings. It refuses to run if any
+question carries a match score; that would need one process per position.
 
 For each question this prints gnubg's best play at 3-ply, whether the page
 accepts it, and the equity loss of the runner-up. That last number decides

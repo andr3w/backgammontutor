@@ -39,6 +39,18 @@ if (!flags.length) {
 }
 
 // --- ask gnubg -----------------------------------------------------------
+// Match scores would need one gnubg process per position: driven as a batch,
+// gnubg carries match state from one `set xgid` to the next and reports
+// equities for the wrong context -- silently, and by margins large enough to
+// look like findings. Nothing leaks between money positions, so the batch is
+// safe for everything built so far.
+const scored = rows.filter(r => (r.q.score && (r.q.score[0] || r.q.score[1])) || r.q.matchLength);
+if (scored.length) {
+  console.error('verify.mjs drives gnubg as one batch, which is only sound for money play.');
+  console.error('These questions carry a match score: ' + scored.map(r => r.q.id).join(', '));
+  process.exit(2);
+}
+
 const HINT = `import gnubg
 gnubg.command("set evaluation chequer eval plies 3")
 gnubg.command("set evaluation chequer eval prune off")
