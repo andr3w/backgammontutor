@@ -76,8 +76,35 @@ body {
 .bg-board .die-face { fill: var(--die); stroke: rgba(0, 0, 0, 0.4); stroke-width: 0.3; }
 .bg-board .pip      { fill: var(--die-pip); }
 
-.bg-board .lit { fill: none; stroke: var(--accent); stroke-width: 0.9; }
+/* Two strengths: solid means the marked die will go from here, dashed means
+   only the other one will. Tapping the dice swaps which is which, and that is
+   how the dice reveal themselves as a control. */
+.bg-board .lit { fill: none; stroke: var(--accent); stroke-width: 1; rx: 1; }
+.bg-board .lit.weak { stroke: var(--pt-num); stroke-width: 0.7; stroke-dasharray: 2 2; }
 .bg-board .hit { fill: transparent; cursor: pointer; }
+
+.bg-board .die.spent { opacity: 0.25; }
+.bg-board .die.now .die-face { stroke: var(--accent); stroke-width: 0.9; }
+
+.controls { display: flex; justify-content: center; min-height: 1.9rem; margin-top: 0.5rem; }
+.controls .undo {
+  -webkit-appearance: none; appearance: none;
+  border: 1px solid var(--rule); border-radius: 999px;
+  background: transparent; color: var(--dim);
+  font: 0.78rem/1 system-ui, sans-serif; letter-spacing: 0.04em;
+  padding: 0.45rem 1.1rem; cursor: pointer; touch-action: manipulation;
+}
+.controls .undo:active { background: var(--rule); color: var(--ink); }
+
+.hint { color: var(--dim); font-style: italic; font-size: 0.88rem; }
+.answer { margin-top: 1.25rem; }
+.answer .played { font-size: 0.95rem; color: var(--dim); }
+.answer .played b { color: var(--ink); font-family: ui-monospace, monospace; }
+.verdict { border-left: 3px solid var(--rule); padding-left: 0.9rem; }
+.verdict.good    { border-left-color: #4c7a3f; }
+.verdict.bad     { border-left-color: var(--accent); }
+.verdict.unknown { border-left-color: var(--dim); font-style: italic; }
+.verdict p:last-child { margin-bottom: 0; }
 
 /* ---- discussion: scrolls on its own, never chains out to the pager ---- */
 .discussion {

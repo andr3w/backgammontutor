@@ -46,12 +46,14 @@ const pips = {
   6: [[-1, -1], [-1, 0], [-1, 1], [1, -1], [1, 0], [1, 1]],
 };
 
-function die($m, n, cx, cy, size) {
-  const r = size / 2, u = size * 0.28;
-  return $m('s:g.die',
-    $m('s:rect.die-face', { x: cx - r, y: cy - r, width: size, height: size, rx: size * 0.18 }),
+const DIE = 9, DIE_GAP = 10.5;
+
+function die($m, n, cx, cy, cls) {
+  const r = DIE / 2, u = DIE * 0.28;
+  return $m(`s:g.${cls}`,
+    $m('s:rect.die-face', { x: cx - r, y: cy - r, width: DIE, height: DIE, rx: DIE * 0.18 }),
     ...(pips[n] || []).map(([px, py]) =>
-      $m('s:circle.pip', { cx: cx + px * u, cy: cy + py * u, r: size * 0.09 })));
+      $m('s:circle.pip', { cx: cx + px * u, cy: cy + py * u, r: DIE * 0.09 })));
 }
 
 function stack($m, p, side, n) {
@@ -65,11 +67,13 @@ function stack($m, p, side, n) {
 
 /**
  * pos   a parsed board literal: { pts: {p: {side, n}}, bar, off }
- * opts  { dice, turn, highlight, interactive }
+ * opts  dice        [3, 1] or [{ v, spent }, ...]; doubles pass four
+ *       cur         index of the die a tap will use next
+ *       highlight   [7, {p: 13, weak: true}, ...]
+ *       interactive emit the transparent tap targets
  */
 export function boardSvg($m, pos, opts = {}) {
-  const { dice = null, turn = 'x', highlight = [], interactive = false } = opts;
-  const lit = new Set(highlight);
+  const { dice = null, cur = -1, turn = 'x', highlight = [], interactive = false } = opts;
   const kids = [];
 
   kids.push($m('s:rect.frame', { x: 0, y: 0, width: W, height: H + FRAME * 2, rx: 2 }));
@@ -111,17 +115,31 @@ export function boardSvg($m, pos, opts = {}) {
     kids.push($m('s:rect.ck.x.borne', { x: tx, y: BOT - 1 - th - i * (th + 0.5), width: tw, height: th, rx: 0.6 }));
 
   // dice, in the well on the side of the player on roll
-  if (dice) {
-    const side = turn === 'x' ? 9 : 3;               // middle of a half
-    const cx = FRAME + side * PW + (side >= 6 ? BAR : 0);
-    kids.push($m('s:g.dice-group', interactive ? { 'data-dice': '1' } : {},
-      ...dice.map((n, i) => die($m, n, cx + (i ? 5.5 : -5.5), MID, 9))));
+  if (dice && dice.length) {
+    const ds = dice.map(d => (typeof d === 'number' ? { v: d } : d));
+    const half = turn === 'x' ? 9 : 3;               // middle of a half
+    const cx = FRAME + half * PW + (half >= 6 ? BAR : 0);
+    const x0 = cx - (ds.length - 1) * DIE_GAP / 2;
+    const g = ds.map((d, i) => die($m, d.v, x0 + i * DIE_GAP, MID,
+      `die${d.spent ? '.spent' : ''}${i === cur ? '.now' : ''}`));
+    // one target over the whole roll: tapping anywhere on it passes the turn
+    // to the other die, which is the only thing the dice do
+    if (interactive) g.push($m('s:rect.hit', { 'data-dice': '1',
+      x: x0 - DIE_GAP / 2 - 1, y: MID - DIE, width: ds.length * DIE_GAP + 2, height: DIE * 2 }));
+    kids.push($m('s:g.dice-group', ...g));
   }
 
   // highlights sit above the checkers, hit targets above everything
-  for (const p of lit) {
+  for (const h of highlight) {
+    const p = typeof h === 'number' ? h : h.p;
+    const weak = typeof h === 'number' ? false : !!h.weak;
+    if (p === 'bar') {
+      kids.push($m(`s:rect.lit${weak ? '.weak' : ''}`,
+        { x: BARX, y: TOP, width: BAR, height: H, rx: 1 }));
+      continue;
+    }
     const x = colX(pointCol(p));
-    kids.push($m('s:rect.lit', isTop(p)
+    kids.push($m(`s:rect.lit${weak ? '.weak' : ''}`, isTop(p)
       ? { x, y: TOP, width: PW, height: HALF, rx: 1 }
       : { x, y: BOT - HALF, width: PW, height: HALF, rx: 1 }));
   }
