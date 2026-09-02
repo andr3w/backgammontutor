@@ -72,9 +72,13 @@ o..xx.||x....o`,
     dice: [2, 1],
     ask: prose`The smallest roll in the game.`,
     goals: [
-      hits(21, prose`One checker, three pips, and he is on the bar. There was a
-        point you could have made instead. It was not worth as much.`,
+      hits(21, prose`One checker, three pips, and he is on the [[bar]]. There
+        was a point you could have made instead. It was not worth as much.`,
         prose`He has a [[blot]] on the 21-point. Send it home.`),
+    ],
+    antigoals: [
+      made(7, prose`It is tempting to make the [[bar point]], and with almost
+        any other roll you should. Here it costs you something better.`),
     ],
   }),
 

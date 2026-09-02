@@ -17,7 +17,7 @@ o...x.||x....o`;
 
 export default page('Build points (easy)', [
 
-  prose`**If the roll makes a point, make it.** A [[made point|point]] is permanent.
+  prose`**If the roll makes a point, make it.** A [[made point|made point]] is permanent.
     The point you make now is still working for you twenty rolls from now.`,
 
   question({

@@ -173,6 +173,22 @@ Neither is "did a checker leave the 24 point".
 `made` and `clear` are not opposites: a point with one checker on it is neither,
 and that is the condition a student most needs telling about.
 
+An **antigoal** names what the student was tempted to do instead. It uses the
+same constructors, but `why` is what to say when they did it and `otherwise` is
+never shown:
+
+```js
+goals:     [hits(21, `…he is on the bar.`, `He has a blot on the 21-point.`)],
+antigoals: [made(7,  `It is tempting to make the bar point…`)],
+```
+
+Only consulted when the answer is wrong, and only the first one that fires
+speaks. It beats a trap keyed to notation, which catches one spelling of one
+play: `made(7)` catches every way of making the 7 point however the rest of the
+roll goes, and it cannot be mistyped into silence. The build refuses an
+antigoal that is true of the correct play, and warns about one no play can
+reach.
+
 Goals are listed in order of importance. Meet them all and every `why` prints;
 fail and only the first failure speaks. A goal with no text of its own gets a
 generated sentence from the position, so `shots(0)` alone still says something

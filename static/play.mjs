@@ -245,12 +245,15 @@ class Play {
       html: decided.map(g => g.why).filter(Boolean).join('') || '<p>That is the play.</p>',
     };
 
-    // The reason first, then anything the page has to say about this exact
-    // play. General before specific, and never one without the other.
-    const trap = (this.q.traps || {})[move];
+    // Meet the student where they are, then redirect. An antigoal names what
+    // they were tempted to do; only the first that fires speaks, for the same
+    // reason only the first failed goal does. Then the reason the play is
+    // wrong, then anything the page has to say about this exact play.
+    const anti = decide(this.q.antigoals, this.q.pos, this.pos, this.side).find(g => g.met);
     const html = [
+      anti && anti.why,
       failed.otherwise || this.q.otherwise || missed(failed, this.q.pos, this.pos, this.side),
-      trap,
+      (this.q.traps || {})[move],
     ].filter(Boolean).join('');
     return { tone: 'bad', html };
   }
